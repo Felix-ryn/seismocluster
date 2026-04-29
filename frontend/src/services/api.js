@@ -7,3 +7,4 @@ const API = axios.create({
 export const getClusters = () => API.get("/clusters");
 export const runClustering = () => API.post("/clusters/run");
 export const getSummary = () => API.get("/summary");
+export const getEarthquakes = () => API.get("/earthquakes");
