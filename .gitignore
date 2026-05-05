@@ -1,0 +1,33 @@
+# =========================
+# PYTHON & ENVIRONMENT
+# =========================
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+.venv/
+
+# =========================
+# SECURITY & SECRETS (SANGAT PENTING)
+# =========================
+.env
+*.env
+
+# =========================
+# DATA & MACHINE LEARNING ARTIFACTS
+# =========================
+# Jangan push file model yang di-generate otomatis karena ukurannya bisa besar
+# dan akan berubah-ubah setiap pipeline dijalankan.
+backend/app/models/saved_models/*.joblib
+backend/app/models/saved_models/*.pkl
+
+# Jangan push file dataset mentah/CSV jika ukurannya besar (di atas 50MB)
+*.csv
+*.xlsx
+
+# =========================
+# IDE & OS FILES
+# =========================
+.vscode/
+.DS_Store

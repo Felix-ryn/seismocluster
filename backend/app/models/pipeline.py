@@ -3,6 +3,9 @@ import pandas as pd
 from sqlalchemy.orm import Session
 from sqlalchemy import text
 from sklearn.preprocessing import StandardScaler
+import joblib
+import os
+
 
 class SeismoDataPipeline:
     def __init__(self):
@@ -10,6 +13,7 @@ class SeismoDataPipeline:
         self.LAT_MIN, self.LAT_MAX = -11.0, 6.0
         self.LON_MIN, self.LON_MAX = 95.0, 141.0
         self.scaler = StandardScaler()
+        self.scaler_path = os.path.join(os.path.dirname(__file__), '../saved_models/scaler.joblib')
 
     def load_from_db(self, db: Session) -> pd.DataFrame:
         """
@@ -40,6 +44,7 @@ class SeismoDataPipeline:
         ].copy()
         
         return df_indo.reset_index(drop=True)
+    
 
     def prepare_features(self, df: pd.DataFrame) -> pd.DataFrame:
         """
@@ -59,3 +64,17 @@ class SeismoDataPipeline:
         
         # Mengembalikan DataFrame yang sudah komplit dengan fitur asli dan scaled
         return df
+    
+    def save_scaler(self):
+        """meyimpan objek scaler ke file """
+        os.makedirs(os.path.dirname(self.scaler_path), exist_ok=True)
+        joblib.dump(self.scaler, self.scaler_path)
+        print("Scaler berhasil disimpan ke:", self.scaler_path)
+        
+    def load_scaler(self):
+        """memuat objek scaler dari file jika ada"""
+        if os.path.exists(self.scaler_path):
+            self.scaler = joblib.load(self.scaler_path)
+            print("Scaler berhasil dimuat dari:", self.scaler_path)
+        else:
+            print("File scaler tidak ditemukan. Pastikan untuk menjalankan save_scaler() setelah fit_transform.")
