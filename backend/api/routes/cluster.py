@@ -1,13 +1,25 @@
-from fastapi import APIRouter
-from app.services.cluster_service import get_clusters
-from app.services.ml_service import run_clustering
+from fastapi import APIRouter, Depends
+from sqlalchemy.orm import Session
 
-router = APIRouter()
+from app.config.database import get_db
+from app.services.cluster_service import ClusterService
 
-@router.get("/")
-def clusters():
-    return get_clusters()
+router = APIRouter(
+    prefix="/api/v1/clusters",
+    tags=["Clusters"]
+)
 
-@router.post("/run")
-def run():
-    return run_clustering()
+
+@router.post("/train")
+def train_cluster(
+    db: Session = Depends(get_db)
+):
+
+    service = ClusterService(db)
+
+    result = service.execute_ml_pipeline()
+
+    return {
+        "status": "success",
+        "result": result
+    }
