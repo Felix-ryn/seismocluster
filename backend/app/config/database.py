@@ -1,8 +1,10 @@
-import psycopg2
+# filepath: backend/app/config/database.py
 import os
 from dotenv import load_dotenv
 from psycopg2.extras import RealDictCursor
+import psycopg2
 
+# Memuat variabel dari file .env
 load_dotenv()
 
 def get_connection():
