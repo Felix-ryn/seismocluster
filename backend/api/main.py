@@ -1,6 +1,11 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from api.routes import ml # Mengimpor file router yang baru dibuat
+from api.routes import (
+    ml,
+    earthquake,
+    cluster,
+    summary
+)
 
 app = FastAPI(
     title="SeismoCluster API",
@@ -20,6 +25,9 @@ app.add_middleware(
 # Mendaftarkan router ML ke dalam aplikasi utama
 # Karena di ml.py sudah ada prefix="/api/v1/ml", kita cukup include_router saja
 app.include_router(ml.router)
+app.include_router(earthquake.router)
+app.include_router(cluster.router)
+app.include_router(summary.router)
 
 @app.get("/")
 def read_root():
