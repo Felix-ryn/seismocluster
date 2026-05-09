@@ -1,17 +1,27 @@
-from app.config.database import get_connection
+from app.repositories.earthquake_repository import (
+    create_earthquake,
+    get_all_earthquakes,
+    get_earthquake_by_id,
+    update_earthquake,
+    delete_earthquake
+)
 
-def get_earthquakes():
-    conn = get_connection()
-    cur = conn.cursor()
 
-    cur.execute("""
-        SELECT latitude, longitude, magnitude
-        FROM processed_earthquakes
-        LIMIT 1000
-    """)
+def create_earthquake_service(data):
+    return create_earthquake(data)
 
-    data = cur.fetchall()
-    cur.close()
-    conn.close()
 
-    return [{"lat": d[0], "lon": d[1], "mag": d[2]} for d in data]
+def get_all_earthquakes_service():
+    return get_all_earthquakes()
+
+
+def get_earthquake_by_id_service(earthquake_id):
+    return get_earthquake_by_id(earthquake_id)
+
+
+def update_earthquake_service(earthquake_id, data):
+    return update_earthquake(earthquake_id, data)
+
+
+def delete_earthquake_service(earthquake_id):
+    return delete_earthquake(earthquake_id)

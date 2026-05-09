@@ -4,7 +4,7 @@ from datetime import datetime
 from sqlalchemy.orm import Session
 from sqlalchemy import text 
 
-from app.models.pipeline import SeismoDataPipeline 
+from app.models.pipeline import SeismoPipeline
 from app.models.clustering.dbscan_model import DBSCANClustering
 from app.models.clustering.kmeans_model import KMeansClustering
 from app.models.clustering.evaluation import ClusterEvaluator
@@ -14,7 +14,7 @@ from app.models.anomaly.isolation_forest_model import IsolationForestAnomaly
 class ClusterService:
     def __init__(self, db_session: Session):
         self.db = db_session
-        self.pipeline = SeismoDataPipeline()
+        self.pipeline = SeismoPipeline()
         self.dbscan = DBSCANClustering(eps=0.15, min_samples=15)
         self.kmeans = KMeansClustering(n_clusters=5) 
         # Inisialisasi Model Anomali
@@ -52,7 +52,7 @@ class ClusterService:
         # 4. LOAD (Menyimpan ke PostgreSQL secara aman)
         try:
             connection = self.db.connection()
-            connection.execute(text("TRUNCATE TABLE processed_earthquakes, earthquake_cluster, cluster_summary CASCADE;"))
+            connection.execute(text("TRUNCATE TABLE processed_earthquakes, earthquake_clusters, cluster_summary CASCADE;"))
 
             # A. Isi tabel `processed_earthquakes`
             cols_processed = [
@@ -67,7 +67,7 @@ class ClusterService:
             df_cluster = df[['id', 'cluster_label', 'is_noise']].copy()
             df_cluster.rename(columns={'id': 'ide'}, inplace=True)
             df_cluster['created_at'] = datetime.now()
-            df_cluster.to_sql('earthquake_cluster', con=connection, if_exists='append', index=False)
+            df_cluster.to_sql('earthquake_clusters', con=connection, if_exists='append', index=False)
 
             # C. Hitung & Isi tabel `cluster_summary`
             df_valid = df[df['cluster_label'] != -1]

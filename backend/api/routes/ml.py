@@ -6,6 +6,7 @@ import json
 from app.config.database import get_db
 from app.models.pipeline import SeismoPipeline
 
+
 # Membuat router khusus untuk operasi Machine Learning
 router = APIRouter(prefix="/api/v1/ml", tags=["Machine Learning Operations"])
 
@@ -57,3 +58,4 @@ def predict_earthquakes_endpoint(db: Session = Depends(get_db)):
     except Exception as e:
         # Menangkap error general dari server atau MLflow
         raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
+    
