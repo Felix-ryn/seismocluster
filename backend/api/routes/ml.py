@@ -1,58 +1,53 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+
 import traceback
 
-# Import dependensi
 from app.config.database import get_db
 from app.models.pipeline import SeismoPipeline
 
-# Membuat router khusus untuk operasi Machine Learning
 router = APIRouter(
     prefix="/api/v1/ml",
     tags=["Machine Learning Operations"]
 )
 
-# Inisialisasi pipeline global
+# GLOBAL PIPELINE
 pipeline = SeismoPipeline()
 
 
 @router.get("/predict-earthquakes")
 def predict_earthquakes_endpoint(
+    limit: int = 100,
     db: Session = Depends(get_db)
 ):
-    """
-    Endpoint Produksi untuk Inferensi MLOps:
-    1. Extract: Tarik data dari PostgreSQL
-    2. Transform: Scaling data
-    3. Predict: Prediksi clustering & anomaly
-    4. Return JSON
-    """
 
     try:
 
         print("=" * 50)
-        print("Menerima request untuk prediksi data gempa...")
+        print("Menerima request prediksi gempa")
 
         # ==========================================
-        # 1. LOAD DATA
+        # LOAD DATA
         # ==========================================
-        print("STEP 1 - Load data dari database")
+        print("STEP 1 - Load data")
 
         df_raw = pipeline.load_from_db(db)
 
         if df_raw.empty:
+
             raise HTTPException(
                 status_code=404,
-                detail="Data gempa tidak ditemukan di database."
+                detail="Data gempa kosong"
             )
 
-        print(f"Jumlah data berhasil diambil: {len(df_raw)}")
-
+        print(
+            f"Jumlah data berhasil diambil: {len(df_raw)}"
+        )
 
         # ==========================================
-        # 2. PREPROCESSING
+        # PREPROCESSING
         # ==========================================
-        print("STEP 2 - Scaling & feature engineering")
+        print("STEP 2 - Preprocessing")
 
         df_processed = pipeline.prepare_features(
             df_raw,
@@ -61,19 +56,24 @@ def predict_earthquakes_endpoint(
 
         print("Preprocessing berhasil")
 
-
         # ==========================================
-        # 3. PREDICTION
+        # PREDICTION
         # ==========================================
-        print("STEP 3 - Menjalankan model MLflow")
+        print("STEP 3 - Prediction")
 
-        df_result = pipeline.predict_all(df_processed)
+        df_result = pipeline.predict_all(
+            df_processed
+        )
 
         print("Prediksi berhasil")
 
+        # ==========================================
+        # LIMIT RESPONSE
+        # ==========================================
+        df_result = df_result.head(limit)
 
         # ==========================================
-        # 4. FORMAT RESPONSE
+        # RESPONSE
         # ==========================================
         cols_to_return = [
             'id',
@@ -96,19 +96,19 @@ def predict_earthquakes_endpoint(
 
         return {
             "status": "success",
-            "message": "Prediksi MLOps berhasil dijalankan",
+            "message": "Prediksi berhasil",
             "total_data": len(result_json),
             "data": result_json
         }
 
     except FileNotFoundError as e:
 
-        print("ERROR SCALER:")
+        print("ERROR SCALER")
         print(str(e))
 
         raise HTTPException(
             status_code=400,
-            detail=f"Scaler Error: {str(e)}"
+            detail=str(e)
         )
 
     except Exception as e:
@@ -123,5 +123,5 @@ def predict_earthquakes_endpoint(
 
         raise HTTPException(
             status_code=500,
-            detail=f"Internal Server Error: {str(e)}"
+            detail=str(e)
         )
