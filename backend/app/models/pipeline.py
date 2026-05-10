@@ -1,131 +1,354 @@
 import pandas as pd
+import numpy as np
+
 from sqlalchemy.orm import Session
 from sqlalchemy import text
+
 from sklearn.preprocessing import StandardScaler
+
 import joblib
 import os
-import mlflow.pyfunc
+
+import mlflow
+import mlflow.sklearn
+
 from dotenv import load_dotenv
 
-# Memuat variabel environment dari file .env
+# ==========================================
+# LOAD ENV
+# ==========================================
 load_dotenv()
 
+
 class SeismoPipeline:
+
     def __init__(self):
-        # 1. Batas Geografis Indonesia
-        self.LAT_MIN, self.LAT_MAX = -11.0, 6.0
-        self.LON_MIN, self.LON_MAX = 95.0, 141.0
-        
-        # 2. Setup Scaler
+
+        # ==========================================
+        # BATAS INDONESIA
+        # ==========================================
+        self.LAT_MIN = -11.0
+        self.LAT_MAX = 6.0
+
+        self.LON_MIN = 95.0
+        self.LON_MAX = 141.0
+
+        # ==========================================
+        # SCALER
+        # ==========================================
         self.scaler = StandardScaler()
-        self.scaler_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../saved_models/scaler.joblib'))
-        self.load_scaler() # Otomatis memuat scaler saat class dipanggil
-        
-        # 3. Setup MLflow Tracking & Models
-        self.mlflow_uri = os.getenv("MLFLOW_TRACKING_URI", "http://localhost:5000")
-        mlflow.set_tracking_uri(self.mlflow_uri)
-        
-        self.cluster_model_name = os.getenv("MLFLOW_CLUSTERING_MODEL_NAME", "SeismoCluster_Clustering_Model")
-        self.anomaly_model_name = os.getenv("MLFLOW_ANOMALY_MODEL_NAME", "SeismoCluster_Anomaly_Model")
-        
+
+        self.scaler_path = os.path.abspath(
+            os.path.join(
+                os.path.dirname(__file__),
+                "../saved_models/scaler.joblib"
+            )
+        )
+
+        self.load_scaler()
+
+        # ==========================================
+        # MLFLOW
+        # ==========================================
+        self.mlflow_uri = os.getenv(
+            "MLFLOW_TRACKING_URI",
+            "http://localhost:5000"
+        )
+
+        mlflow.set_tracking_uri(
+            self.mlflow_uri
+        )
+
+        # ==========================================
+        # MODEL NAMES
+        # ==========================================
+        self.cluster_model_name = os.getenv(
+            "MLFLOW_CLUSTERING_MODEL_NAME",
+            "SeismoCluster_Hierarchy_Model"
+        )
+
+        self.anomaly_model_name = os.getenv(
+            "MLFLOW_ANOMALY_MODEL_NAME",
+            "SeismoCluster_Anomaly_Model_ISF"
+        )
+
+        # ==========================================
+        # MODEL OBJECT
+        # ==========================================
         self.clustering_model = None
         self.anomaly_model = None
 
-    # FASE 1: DATA ENGINEERING (EXTRACT)
-    def load_from_db(self, db: Session) -> pd.DataFrame:
-        """Mengekstrak data mentah dari PostgreSQL dan memfilter wilayah Indonesia."""
-        query = text("""
-            SELECT id, time, latitude, longitude, depth, magnitude, place 
-            FROM raw_earthquakes 
-            WHERE magnitude IS NOT NULL 
-              AND latitude IS NOT NULL 
-              AND longitude IS NOT NULL
-        """)
-        
-        df = pd.read_sql(query, db.bind)
-        
-        df['time'] = pd.to_datetime(df['time'])
-        df['year'] = df['time'].dt.year
-        df['month'] = df['time'].dt.month
-        df['day'] = df['time'].dt.day
-        
-        # Filter Spasial
-        df_indo = df[
-            (df['latitude'] >= self.LAT_MIN) & (df['latitude'] <= self.LAT_MAX) &
-            (df['longitude'] >= self.LON_MIN) & (df['longitude'] <= self.LON_MAX)
-        ].copy()
-        
-        return df_indo.reset_index(drop=True)
+    # ==========================================
+    # LOAD DATA
+    # ==========================================
+    def load_from_db(
+        self,
+        db: Session
+    ) -> pd.DataFrame:
 
-    # FASE 2: DATA TRANSFORMATION (SCALING)
-    def prepare_features(self, df: pd.DataFrame, is_training: bool = False) -> pd.DataFrame:
-        """
-        Standarisasi nilai. 
-        Jika is_training=True, scaler akan fit_transform (belajar pola baru).
-        Jika is_training=False (Produksi), scaler HANYA transform (pakai pola lama).
-        """
-        cols_to_scale = ['latitude', 'longitude', 'depth', 'magnitude']
-        
+        query = text("""
+            SELECT
+                id,
+                time,
+                latitude,
+                longitude,
+                depth,
+                magnitude,
+                place
+            FROM raw_earthquakes
+            WHERE magnitude IS NOT NULL
+              AND latitude IS NOT NULL
+              AND longitude IS NOT NULL
+            ORDER BY time DESC
+            LIMIT 1000
+        """)
+
+        df = pd.read_sql(
+            query,
+            db.bind
+        )
+
+        # ==========================================
+        # DATETIME
+        # ==========================================
+        df['time'] = pd.to_datetime(
+            df['time']
+        )
+
+        # ==========================================
+        # FILTER INDONESIA
+        # ==========================================
+        df = df[
+            (df['latitude'] >= self.LAT_MIN) &
+            (df['latitude'] <= self.LAT_MAX) &
+            (df['longitude'] >= self.LON_MIN) &
+            (df['longitude'] <= self.LON_MAX)
+        ].copy()
+
+        return df.reset_index(drop=True)
+
+    # ==========================================
+    # FEATURE ENGINEERING
+    # ==========================================
+    def prepare_features(
+        self,
+        df: pd.DataFrame,
+        is_training: bool = False
+    ) -> pd.DataFrame:
+
+        cols_to_scale = [
+            'latitude',
+            'longitude',
+            'depth',
+            'magnitude'
+        ]
+
+        # ==========================================
+        # TRAINING
+        # ==========================================
         if is_training:
-            scaled_array = self.scaler.fit_transform(df[cols_to_scale])
+
+            scaled_array = self.scaler.fit_transform(
+                df[cols_to_scale]
+            )
+
             self.save_scaler()
+
+        # ==========================================
+        # INFERENCE
+        # ==========================================
         else:
-            # Di tahap produksi/API, kita WAJIB menggunakan transform, bukan fit_transform
-            if not os.path.exists(self.scaler_path):
-                raise FileNotFoundError("Scaler belum dilatih! Jalankan training terlebih dahulu.")
-            scaled_array = self.scaler.transform(df[cols_to_scale])
-            
+
+            if not os.path.exists(
+                self.scaler_path
+            ):
+                raise FileNotFoundError(
+                    "Scaler belum tersedia."
+                )
+
+            scaled_array = self.scaler.transform(
+                df[cols_to_scale]
+            )
+
+        # ==========================================
+        # SAVE FEATURES
+        # ==========================================
         df['latitude_scaled'] = scaled_array[:, 0]
         df['longitude_scaled'] = scaled_array[:, 1]
         df['depth_scaled'] = scaled_array[:, 2]
         df['magnitude_scaled'] = scaled_array[:, 3]
-        
+
         return df
 
+    # ==========================================
+    # SAVE SCALER
+    # ==========================================
     def save_scaler(self):
-        os.makedirs(os.path.dirname(self.scaler_path), exist_ok=True)
-        joblib.dump(self.scaler, self.scaler_path)
-        print(f"Scaler disimpan ke: {self.scaler_path}")
-        
+
+        os.makedirs(
+            os.path.dirname(
+                self.scaler_path
+            ),
+            exist_ok=True
+        )
+
+        joblib.dump(
+            self.scaler,
+            self.scaler_path
+        )
+
+        print(
+            f"Scaler berhasil disimpan: {self.scaler_path}"
+        )
+
+    # ==========================================
+    # LOAD SCALER
+    # ==========================================
     def load_scaler(self):
-        if os.path.exists(self.scaler_path):
-            self.scaler = joblib.load(self.scaler_path)
+
+        if os.path.exists(
+            self.scaler_path
+        ):
+
+            self.scaler = joblib.load(
+                self.scaler_path
+            )
+
+            print(
+                "Scaler berhasil dimuat"
+            )
+
         else:
-            print("File scaler belum ada. Mode training diperlukan.")
 
-    # FASE 3: MLOPS INFERENCE (PREDICTION)
+            print(
+                "Scaler belum tersedia"
+            )
+
+    # ==========================================
+    # LOAD MODEL MLFLOW
+    # ==========================================
     def load_mlflow_models(self):
-        """Menarik model AI terbaru yang memiliki label @champion dari MLflow"""
-        try:
-            print("Mencari model AI @champion di MLflow...")
-            self.clustering_model = mlflow.pyfunc.load_model(f"models:/{self.cluster_model_name}@champion")
-            self.anomaly_model = mlflow.pyfunc.load_model(f"models:/{self.anomaly_model_name}@champion")
-            print("Model Clustering & Anomaly berhasil dimuat!")
-        except Exception as e:
-            raise RuntimeError(f"Gagal memuat model dari MLflow. Pastikan server menyala. Error: {e}")
 
-    def predict_all(self, df_processed: pd.DataFrame) -> pd.DataFrame:
-        """
-        Mengeksekusi model Hierarchical dan Isolation Forest ke data yang sudah di-scale.
-        """
-        if not self.clustering_model or not self.anomaly_model:
+        try:
+
+            print("=" * 50)
+            print("Menghubungkan ke MLflow")
+
+            print(
+                f"Load Clustering Model: {self.cluster_model_name}"
+            )
+
+            self.clustering_model = mlflow.sklearn.load_model(
+                f"models:/{self.cluster_model_name}@champion"
+            )
+
+            print(
+                f"Load Anomaly Model: {self.anomaly_model_name}"
+            )
+
+            self.anomaly_model = mlflow.sklearn.load_model(
+                f"models:/{self.anomaly_model_name}@champion"
+            )
+
+            print(
+                "Semua model berhasil dimuat"
+            )
+
+            print("=" * 50)
+
+        except Exception as e:
+
+            raise RuntimeError(
+                f"Gagal load model MLflow: {str(e)}"
+            )
+
+    # ==========================================
+    # PREDICT ALL
+    # ==========================================
+    def predict_all(
+        self,
+        df_processed: pd.DataFrame
+    ) -> pd.DataFrame:
+
+        # ==========================================
+        # LOAD MODEL
+        # ==========================================
+        if (
+            self.clustering_model is None or
+            self.anomaly_model is None
+        ):
             self.load_mlflow_models()
-            
-        # Ekstrak fitur 4D
-        X_infer = df_processed[['latitude_scaled', 'longitude_scaled', 'depth_scaled', 'magnitude_scaled']].values
-        
-        print("Mengeksekusi prediksi AI ganda...")
-        # Prediksi 3 Zona Klaster (Hierarchical)
-        clusters = self.clustering_model.predict(X_infer)
-        
-        # Prediksi Anomali Ekstrem (Isolation Forest)
-        # Output asli: 1 (Normal), -1 (Anomali). Kita ubah ke Boolean agar mudah diolah frontend.
-        anomalies_raw = self.anomaly_model.predict(X_infer)
-        is_anomaly = [True if a == -1 else False for a in anomalies_raw]
-        
-        # Tempelkan hasil ke DataFrame
+
+        # ==========================================
+        # DATA SPATIAL
+        # SESUAI NOTEBOOK
+        # ==========================================
+        df_processed['lat_radian'] = np.radians(
+            df_processed['latitude']
+        )
+
+        df_processed['lon_radian'] = np.radians(
+            df_processed['longitude']
+        )
+
+        coords_radians = df_processed[
+            [
+                'lat_radian',
+                'lon_radian'
+            ]
+        ]
+
+        # ==========================================
+        # DATA 4D ANOMALY
+        # ==========================================
+        X_anomaly = df_processed[
+            [
+                'latitude_scaled',
+                'longitude_scaled',
+                'depth_scaled',
+                'magnitude_scaled'
+            ]
+        ]
+
+        # ==========================================
+        # HIERARCHICAL CLUSTERING
+        # ==========================================
+        print(
+            "Menjalankan hierarchical clustering..."
+        )
+
+        clusters = self.clustering_model.fit_predict(
+            coords_radians
+        )
+
+        # ==========================================
+        # ISOLATION FOREST
+        # ==========================================
+        print(
+            "Menjalankan anomaly detection..."
+        )
+
+        anomalies = self.anomaly_model.predict(
+            X_anomaly
+        )
+
+        # ==========================================
+        # BOOLEAN ANOMALY
+        # ==========================================
+        is_anomaly = [
+            True if x == -1 else False
+            for x in anomalies
+        ]
+
+        # ==========================================
+        # SAVE RESULT
+        # ==========================================
         df_processed['zona_klaster'] = clusters
+
         df_processed['is_anomaly'] = is_anomaly
-        
-        print(f"Prediksi selesai untuk {len(df_processed)} data gempa.")
+
+        print(
+            f"Prediksi selesai untuk {len(df_processed)} data"
+        )
+
         return df_processed

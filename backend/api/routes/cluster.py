@@ -1,5 +1,6 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+import traceback
 
 from app.config.database import get_db
 from app.services.cluster_service import ClusterService
@@ -15,11 +16,32 @@ def train_cluster(
     db: Session = Depends(get_db)
 ):
 
-    service = ClusterService(db)
+    try:
 
-    result = service.execute_ml_pipeline()
+        print("=" * 50)
+        print("START TRAINING PIPELINE")
 
-    return {
-        "status": "success",
-        "result": result
-    }
+        service = ClusterService(db)
+
+        result = service.execute_ml_pipeline()
+
+        print("TRAINING BERHASIL")
+        print("=" * 50)
+
+        return {
+            "status": "success",
+            "result": result
+        }
+
+    except Exception as e:
+
+        print("=" * 50)
+        print("ERROR TRAINING")
+        print(str(e))
+        traceback.print_exc()
+        print("=" * 50)
+
+        raise HTTPException(
+            status_code=500,
+            detail=str(e)
+        )
