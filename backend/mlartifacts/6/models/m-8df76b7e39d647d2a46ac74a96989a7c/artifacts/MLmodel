@@ -1,0 +1,15 @@
+artifact_path: mlflow-artifacts:/6/models/m-8df76b7e39d647d2a46ac74a96989a7c/artifacts
+flavors:
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.4.2
+    skops_trusted_types: null
+mlflow_version: 3.11.1
+model_id: m-8df76b7e39d647d2a46ac74a96989a7c
+model_size_bytes: 200432
+model_uuid: m-8df76b7e39d647d2a46ac74a96989a7c
+prompts: null
+run_id: 529198474bab4f61b6fd2585bece69dc
+utc_time_created: '2026-05-09 15:56:06.073832'
