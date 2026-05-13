@@ -99,31 +99,24 @@ class SeismoPipeline:
             WHERE magnitude IS NOT NULL
               AND latitude IS NOT NULL
               AND longitude IS NOT NULL
+              AND latitude  BETWEEN :lat_min  AND :lat_max
+              AND longitude BETWEEN :lon_min  AND :lon_max
             ORDER BY time DESC
             LIMIT 1000
         """)
 
         df = pd.read_sql(
             query,
-            db.bind
+            db.bind,
+            params={
+                "lat_min": self.LAT_MIN,
+                "lat_max": self.LAT_MAX,
+                "lon_min": self.LON_MIN,
+                "lon_max": self.LON_MAX,
+            }
         )
 
-        # ==========================================
-        # DATETIME
-        # ==========================================
-        df['time'] = pd.to_datetime(
-            df['time']
-        )
-
-        # ==========================================
-        # FILTER INDONESIA
-        # ==========================================
-        df = df[
-            (df['latitude'] >= self.LAT_MIN) &
-            (df['latitude'] <= self.LAT_MAX) &
-            (df['longitude'] >= self.LON_MIN) &
-            (df['longitude'] <= self.LON_MAX)
-        ].copy()
+        df['time'] = pd.to_datetime(df['time'])
 
         return df.reset_index(drop=True)
 
@@ -177,6 +170,10 @@ class SeismoPipeline:
         df['longitude_scaled'] = scaled_array[:, 1]
         df['depth_scaled'] = scaled_array[:, 2]
         df['magnitude_scaled'] = scaled_array[:, 3]
+
+        df['year'] = df['time'].dt.year
+        df['month'] = df['time'].dt.month
+        df['day'] = df['time'].dt.day
 
         return df
 
