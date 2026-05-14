@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install *)",
+      "Bash(node -e \"import\\('lucide-react'\\).then\\(m => { const icons = ['LayoutDashboard','Crosshair','Flame','TrendingUp','AlertTriangle','Activity','Waves','Menu','Bell','Search']; icons.forEach\\(name => console.log\\(name, name in m ? 'OK' : 'MISSING'\\)\\); }\\)\")"
+    ]
+  }
+}

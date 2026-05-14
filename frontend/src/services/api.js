@@ -1,10 +1,39 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:8000"
+  baseURL: "http://127.0.0.1:8000"
 });
 
-export const getClusters = () => API.get("/clusters");
-export const runClustering = () => API.post("/clusters/run");
-export const getSummary = () => API.get("/summary");
-export const getEarthquakes = () => API.get("/earthquakes");
+// ── Earthquake CRUD ──────────────────────────────────────────
+export const getEarthquakes = (limit = 500, offset = 0) =>
+  API.get(`/api/v1/earthquakes/?limit=${limit}&offset=${offset}`);
+
+export const getEarthquakeById = (id) =>
+  API.get(`/api/v1/earthquakes/${id}`);
+
+// ── Clustering ───────────────────────────────────────────────
+export const runETL = () =>
+  API.post("/api/v1/clusters/etl");
+
+export const runTraining = () =>
+  API.post("/api/v1/clusters/train");
+
+export const getClusterResults = (limit = 500, offset = 0) =>
+  API.get(`/api/v1/clusters/results?limit=${limit}&offset=${offset}`);
+
+export const getAnomalies = (limit = 200) =>
+  API.get(`/api/v1/clusters/anomalies?limit=${limit}`);
+
+// ── ML / Prediction ─────────────────────────────────────────
+export const predictEarthquakes = (limit = 100) =>
+  API.get(`/api/v1/ml/predict-earthquakes?limit=${limit}`);
+
+export const getModelStatus = () =>
+  API.get("/api/v1/ml/models");
+
+// ── Summary ──────────────────────────────────────────────────
+export const getSummary = () =>
+  API.get("/api/v1/summary/");
+
+export const getSummaryStats = () =>
+  API.get("/api/v1/summary/stats");
