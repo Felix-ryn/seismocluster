@@ -4,6 +4,7 @@ import traceback
 from app.services.summary_service import get_summary, get_summary_stats
 
 router = APIRouter(
+    
     prefix="/api/v1/summary",
     tags=["Summary"]
 )

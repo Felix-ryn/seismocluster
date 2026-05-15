@@ -11,7 +11,8 @@ def run_pipeline():
     transformed = transform_data(raw_data)
     print(f"🔄 Transformed: {len(transformed)} records")
 
-    load_to_database(transformed)
-    print("💾 Data loaded to database")
+    inserted = load_to_database(transformed)
+    print(f"💾 Data loaded to database: {inserted} baru disimpan")
 
     print("✅ ETL Pipeline finished!")
+    return inserted

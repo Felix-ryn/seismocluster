@@ -29,10 +29,11 @@ def create(data: EarthquakeCreate):
 @router.get("/")
 def get_all(
     limit: int = Query(default=500, ge=1, le=5000, description="Jumlah data yang diambil"),
-    offset: int = Query(default=0, ge=0, description="Offset untuk pagination")
+    offset: int = Query(default=0, ge=0, description="Offset untuk pagination"),
+    indonesia_only: bool = Query(default=False, description="Filter hanya gempa wilayah Indonesia")
 ):
-    data = get_all_earthquakes(limit=limit, offset=offset)
-    total = get_earthquake_count()
+    data = get_all_earthquakes(limit=limit, offset=offset, indonesia_only=indonesia_only)
+    total = get_earthquake_count(indonesia_only=indonesia_only)
     return {
         "status": "success",
         "total": total,
