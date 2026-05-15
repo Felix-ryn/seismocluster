@@ -84,13 +84,18 @@ def insert_earthquakes_bulk(data_list):
     return len(values)
 
 
-def get_all_earthquakes(limit=500, offset=0):
+def get_all_earthquakes(limit=500, offset=0, indonesia_only=False):
     conn, cursor = get_cursor()
-    cursor.execute("""
+    where = """
+        WHERE latitude BETWEEN -11.0 AND 6.0
+          AND longitude BETWEEN 95.0 AND 141.0
+    """ if indonesia_only else ""
+    cursor.execute(f"""
         SELECT
             id, time, latitude, longitude, depth, magnitude,
             mag_type, place, status, updated
         FROM raw_earthquakes
+        {where}
         ORDER BY time DESC
         LIMIT %s OFFSET %s
     """, (limit, offset))
@@ -100,9 +105,13 @@ def get_all_earthquakes(limit=500, offset=0):
     return [dict(row) for row in data]
 
 
-def get_earthquake_count():
+def get_earthquake_count(indonesia_only=False):
     conn, cursor = get_cursor()
-    cursor.execute("SELECT COUNT(*) as total FROM raw_earthquakes")
+    where = """
+        WHERE latitude BETWEEN -11.0 AND 6.0
+          AND longitude BETWEEN 95.0 AND 141.0
+    """ if indonesia_only else ""
+    cursor.execute(f"SELECT COUNT(*) as total FROM raw_earthquakes {where}")
     result = cursor.fetchone()
     cursor.close()
     conn.close()

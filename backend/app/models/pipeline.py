@@ -102,12 +102,11 @@ class SeismoPipeline:
               AND latitude  BETWEEN :lat_min  AND :lat_max
               AND longitude BETWEEN :lon_min  AND :lon_max
             ORDER BY time DESC
-            LIMIT 1000
         """)
 
         df = pd.read_sql(
             query,
-            db.bind,
+            db.connection(),
             params={
                 "lat_min": self.LAT_MIN,
                 "lat_max": self.LAT_MAX,

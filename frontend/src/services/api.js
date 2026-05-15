@@ -5,8 +5,8 @@ const API = axios.create({
 });
 
 // ── Earthquake CRUD ──────────────────────────────────────────
-export const getEarthquakes = (limit = 500, offset = 0) =>
-  API.get(`/api/v1/earthquakes/?limit=${limit}&offset=${offset}`);
+export const getEarthquakes = (limit = 500, offset = 0, indonesiaOnly = false) =>
+  API.get(`/api/v1/earthquakes/?limit=${limit}&offset=${offset}&indonesia_only=${indonesiaOnly}`);
 
 export const getEarthquakeById = (id) =>
   API.get(`/api/v1/earthquakes/${id}`);
@@ -23,13 +23,6 @@ export const getClusterResults = (limit = 500, offset = 0) =>
 
 export const getAnomalies = (limit = 200) =>
   API.get(`/api/v1/clusters/anomalies?limit=${limit}`);
-
-// ── ML / Prediction ─────────────────────────────────────────
-export const predictEarthquakes = (limit = 100) =>
-  API.get(`/api/v1/ml/predict-earthquakes?limit=${limit}`);
-
-export const getModelStatus = () =>
-  API.get("/api/v1/ml/models");
 
 // ── Summary ──────────────────────────────────────────────────
 export const getSummary = () =>
