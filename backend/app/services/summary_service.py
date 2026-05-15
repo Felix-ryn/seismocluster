@@ -47,9 +47,11 @@ def get_summary_stats():
     anomaly_row = cur.fetchone()
 
     cur.execute("""
-        SELECT COUNT(*) FROM earthquake_clusters WHERE is_noise = TRUE
+        SELECT COUNT(*) FROM raw_earthquakes
+        WHERE latitude BETWEEN -11.0 AND 6.0
+          AND longitude BETWEEN 95.0 AND 141.0
     """)
-    noise_row = cur.fetchone()
+    raw_indonesia_row = cur.fetchone()
 
     cur.close()
     conn.close()
@@ -60,5 +62,5 @@ def get_summary_stats():
         "avg_magnitude": round(float(stats[2]), 4) if stats[2] else 0.0,
         "avg_depth": round(float(stats[3]), 4) if stats[3] else 0.0,
         "total_anomalies": int(anomaly_row[0]) if anomaly_row else 0,
-        "total_noise_points": int(noise_row[0]) if noise_row else 0
+        "total_raw_indonesia": int(raw_indonesia_row[0]) if raw_indonesia_row else 0
     }
