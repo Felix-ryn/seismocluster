@@ -64,7 +64,12 @@ class SeismoPipeline:
         # ==========================================
         self.cluster_model_name = os.getenv(
             "MLFLOW_CLUSTERING_MODEL_NAME",
-            "SeismoCluster_Hierarchy_Model"
+            "SeismoCluster_Clustering_Model_KMeans"
+        )
+
+        self.hotspot_model_name = os.getenv(
+            "MLFLOW_HOTSPOT_MODEL_NAME",
+            "SeismoCluster_Hotspot_Model"
         )
 
         self.anomaly_model_name = os.getenv(
@@ -72,11 +77,18 @@ class SeismoPipeline:
             "SeismoCluster_Anomaly_Model_ISF"
         )
 
+        self.hierarchy_model_name = os.getenv(
+            "MLFLOW_HIERARCHY_MODEL_NAME",
+            "SeismoCluster_Hierarchy_Model"
+        )
+
         # ==========================================
         # MODEL OBJECT
         # ==========================================
         self.clustering_model = None
-        self.anomaly_model = None
+        self.hotspot_model    = None
+        self.anomaly_model    = None
+        self.hierarchy_model  = None
 
     # ==========================================
     # LOAD DATA
@@ -233,17 +245,29 @@ class SeismoPipeline:
             print(
                 f"Load Clustering Model: {self.cluster_model_name}"
             )
-
             self.clustering_model = mlflow.sklearn.load_model(
                 f"models:/{self.cluster_model_name}@champion"
             )
 
             print(
-                f"Load Anomaly Model: {self.anomaly_model_name}"
+                f"Load Hotspot Model: {self.hotspot_model_name}"
+            )
+            self.hotspot_model = mlflow.sklearn.load_model(
+                f"models:/{self.hotspot_model_name}@champion"
             )
 
+            print(
+                f"Load Anomaly Model: {self.anomaly_model_name}"
+            )
             self.anomaly_model = mlflow.sklearn.load_model(
                 f"models:/{self.anomaly_model_name}@champion"
+            )
+
+            print(
+                f"Load Hierarchy Model: {self.hierarchy_model_name}"
+            )
+            self.hierarchy_model = mlflow.sklearn.load_model(
+                f"models:/{self.hierarchy_model_name}@champion"
             )
 
             print(
@@ -271,7 +295,9 @@ class SeismoPipeline:
         # ==========================================
         if (
             self.clustering_model is None or
-            self.anomaly_model is None
+            self.hotspot_model    is None or
+            self.anomaly_model    is None or
+            self.hierarchy_model  is None
         ):
             self.load_mlflow_models()
 
@@ -287,16 +313,15 @@ class SeismoPipeline:
             df_processed['longitude']
         )
 
+        # Gunakan .values agar model tidak sensitif terhadap nama kolom
         coords_radians = df_processed[
-            [
-                'lat_radian',
-                'lon_radian'
-            ]
-        ]
+            ['lat_radian', 'lon_radian']
+        ].values
 
         # ==========================================
         # DATA 4D ANOMALY
         # ==========================================
+        # .values agar tidak memicu warning feature names pada IsolationForest
         X_anomaly = df_processed[
             [
                 'latitude_scaled',
@@ -304,16 +329,29 @@ class SeismoPipeline:
                 'depth_scaled',
                 'magnitude_scaled'
             ]
-        ]
+        ].values
 
         # ==========================================
-        # HIERARCHICAL CLUSTERING
+        # KMEANS CLUSTERING
         # ==========================================
         print(
-            "Menjalankan hierarchical clustering..."
+            "Menjalankan KMeans clustering..."
         )
 
         clusters = self.clustering_model.fit_predict(
+            coords_radians
+        )
+
+        # ==========================================
+        # HOTSPOT DETECTION
+        # Hotspot model (DBSCAN Haversine) butuh
+        # koordinat radian 2D: [lat_rad, lon_rad]
+        # ==========================================
+        print(
+            "Menjalankan hotspot detection..."
+        )
+
+        hotspot_zones = self.hotspot_model.fit_predict(
             coords_radians
         )
 
@@ -329,6 +367,17 @@ class SeismoPipeline:
         )
 
         # ==========================================
+        # HIERARCHICAL CLUSTERING
+        # ==========================================
+        print(
+            "Menjalankan hierarchical clustering..."
+        )
+
+        hierarchy_labels = self.hierarchy_model.fit_predict(
+            coords_radians
+        )
+
+        # ==========================================
         # BOOLEAN ANOMALY
         # ==========================================
         is_anomaly = [
@@ -339,9 +388,10 @@ class SeismoPipeline:
         # ==========================================
         # SAVE RESULT
         # ==========================================
-        df_processed['zona_klaster'] = clusters
-
-        df_processed['is_anomaly'] = is_anomaly
+        df_processed['zona_klaster']   = clusters
+        df_processed['hotspot_zone']   = hotspot_zones
+        df_processed['hierarchy_label'] = hierarchy_labels
+        df_processed['is_anomaly']     = is_anomaly
 
         print(
             f"Prediksi selesai untuk {len(df_processed)} data"
