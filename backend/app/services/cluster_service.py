@@ -43,12 +43,17 @@ class ClusterService:
         df = self.pipeline.predict_all(df)
         total_anomali = int(df['is_anomaly'].sum())
 
-        # 4. EVALUASI Hierarchical clustering menggunakan koordinat radian
+        # 4. EVALUASI semua model clustering menggunakan koordinat radian
         coords_radians = df[['lat_radian', 'lon_radian']].values
-        eval_result = ClusterEvaluator.evaluate_model(
-            "Hierarchical (MLflow Champion)",
+        eval_kmeans = ClusterEvaluator.evaluate_model(
+            "KMeans (MLflow Champion)",
             coords_radians,
             df['zona_klaster'].values
+        )
+        eval_hierarchy = ClusterEvaluator.evaluate_model(
+            "Hierarchical (MLflow Champion)",
+            coords_radians,
+            df['hierarchy_label'].values
         )
 
         # 5. SAVE ke PostgreSQL
@@ -93,14 +98,17 @@ class ClusterService:
 
             return {
                 "status": "success",
-                "model_source": "MLflow @champion (Hierarchical + Isolation Forest)",
+                "model_source": "MLflow @champion (KMeans + Hotspot + Isolation Forest + Hierarchical)",
                 "summary": {
                     "total_data_processed": len(df),
-                    "hotspot_zones_found": int(df['zona_klaster'].nunique()),
+                    "kmeans_zones_found": int(df['zona_klaster'].nunique()),
+                    "hotspot_zones_found": int(df['hotspot_zone'].nunique()),
+                    "hierarchy_zones_found": int(df['hierarchy_label'].nunique()),
                     "anomaly_alerts_detected": total_anomali
                 },
                 "evaluation_metrics": {
-                    "hierarchical": eval_result
+                    "kmeans": eval_kmeans,
+                    "hierarchical": eval_hierarchy
                 }
             }
 

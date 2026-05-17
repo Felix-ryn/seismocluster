@@ -98,18 +98,14 @@ def get_model_status():
 
         client = mlflow.tracking.MlflowClient()
 
-        cluster_model_name = os.getenv(
-            "MLFLOW_CLUSTERING_MODEL_NAME",
-            "SeismoCluster_Hierarchy_Model"
-        )
-        anomaly_model_name = os.getenv(
-            "MLFLOW_ANOMALY_MODEL_NAME",
-            "SeismoCluster_Anomaly_Model_ISF"
-        )
+        cluster_model_name   = os.getenv("MLFLOW_CLUSTERING_MODEL_NAME", "SeismoCluster_Clustering_Model_KMeans")
+        hotspot_model_name   = os.getenv("MLFLOW_HOTSPOT_MODEL_NAME",   "SeismoCluster_Hotspot_Model")
+        anomaly_model_name   = os.getenv("MLFLOW_ANOMALY_MODEL_NAME",   "SeismoCluster_Anomaly_Model_ISF")
+        hierarchy_model_name = os.getenv("MLFLOW_HIERARCHY_MODEL_NAME", "SeismoCluster_Hierarchy_Model")
 
         models_info = []
 
-        for model_name in [cluster_model_name, anomaly_model_name]:
+        for model_name in [cluster_model_name, hotspot_model_name, anomaly_model_name, hierarchy_model_name]:
             try:
                 versions = client.search_model_versions(f"name='{model_name}'")
                 champion = None
