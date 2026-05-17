@@ -368,14 +368,45 @@ class SeismoPipeline:
 
         # ==========================================
         # HIERARCHICAL CLUSTERING
+        # Ward linkage is O(n²) memory — subsample large datasets,
+        # then assign all points to nearest cluster centroid.
         # ==========================================
         print(
             "Menjalankan hierarchical clustering..."
         )
 
-        hierarchy_labels = self.hierarchy_model.fit_predict(
-            coords_radians
-        )
+        N = len(coords_radians)
+        HIER_MAX = 1500
+
+        if N > HIER_MAX:
+            print(
+                f"Subsample {HIER_MAX} dari {N} titik untuk hierarchical clustering..."
+            )
+            rng = np.random.default_rng(42)
+            sample_idx = rng.choice(N, HIER_MAX, replace=False)
+            sample_coords = coords_radians[sample_idx]
+
+            self.hierarchy_model.fit(sample_coords)
+            sample_labels = self.hierarchy_model.labels_
+            unique_labels = np.unique(sample_labels)
+
+            # Centroid per cluster dari sample
+            centroids = np.vstack([
+                sample_coords[sample_labels == k].mean(axis=0)
+                for k in unique_labels
+            ])
+
+            # Assign semua titik ke centroid terdekat
+            dist = np.linalg.norm(
+                coords_radians[:, np.newaxis, :] - centroids[np.newaxis, :, :],
+                axis=2
+            )
+            hierarchy_labels = dist.argmin(axis=1)
+
+        else:
+            hierarchy_labels = self.hierarchy_model.fit_predict(
+                coords_radians
+            )
 
         # ==========================================
         # BOOLEAN ANOMALY
