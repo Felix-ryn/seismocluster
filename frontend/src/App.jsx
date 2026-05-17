@@ -9,6 +9,7 @@ import Movement from "./pages/Movement";
 import Anomaly from "./pages/Anomaly";
 import Trend from "./pages/Trend";
 import Realtime from "./pages/Realtime";
+import Landing from "./pages/Landing";
 import "./App.scss";
 
 function AppShell() {
@@ -36,7 +37,8 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<AppShell />}>
+        <Route path="/" element={<Landing />} />
+        <Route path="/dashboard" element={<AppShell />}>
           <Route index element={<ClusterMap />} />
           <Route path="hotspot" element={<Hotspot />} />
           <Route path="centroid" element={<Centroid />} />
