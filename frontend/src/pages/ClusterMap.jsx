@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import {
   getClusterResults, getSummary, getSummaryStats,
   getAnomalies, runETL, runTraining,
@@ -32,7 +32,7 @@ export default function ClusterMap() {
         getSummaryStats(),
         getClusterResults(500),
         getSummary(),
-        getAnomalies(10),
+        getAnomalies(500),
       ]);
       setStats(statsRes.data.data ?? {});
       setPoints(pointsRes.data.data ?? []);
@@ -77,6 +77,14 @@ export default function ClusterMap() {
     }
   };
 
+  const mapPoints = useMemo(() => {
+    const ids = new Set(points.map(p => p.id));
+    const extra = anomalies
+      .filter(a => !ids.has(a.id))
+      .map(a => ({ ...a, is_anomaly: true }));
+    return [...points, ...extra];
+  }, [points, anomalies]);
+
   const fmtTime = (iso) =>
     iso ? new Date(iso).toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" }) : "";
 
@@ -120,7 +128,7 @@ export default function ClusterMap() {
         {/* Left */}
         <div className="cluster-left">
           <div className="panel panel--flush">
-            <Map data={points} />
+            <Map data={mapPoints} />
           </div>
 
           {points.length > 0 && (
