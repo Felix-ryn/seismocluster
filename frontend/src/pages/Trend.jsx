@@ -1,8 +1,8 @@
 import { useEffect, useState, useMemo } from "react";
 import { getEarthquakes } from "../services/api";
 import {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid,
-  Tooltip, ResponsiveContainer,
+  LineChart, Line, XAxis, YAxis, CartesianGrid,
+  Tooltip, ResponsiveContainer, Dot,
 } from "recharts";
 
 export default function Trend() {
@@ -63,9 +63,9 @@ export default function Trend() {
           <p className="panel-title">Frekuensi Gempa per Hari (30 hari terakhir)</p>
           <div style={{ height: 300 }}>
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart
+              <LineChart
                 data={trendData}
-                margin={{ top: 4, right: 16, left: 0, bottom: 30 }}
+                margin={{ top: 8, right: 16, left: 0, bottom: 30 }}
               >
                 <CartesianGrid strokeDasharray="3 3" stroke="#E4E8F2" vertical={false} />
                 <XAxis
@@ -86,8 +86,15 @@ export default function Trend() {
                   }}
                   formatter={(val) => [val, "Gempa"]}
                 />
-                <Bar dataKey="count" fill="#7C3AED" fillOpacity={0.75} radius={[4, 4, 0, 0]} />
-              </BarChart>
+                <Line
+                  type="monotone"
+                  dataKey="count"
+                  stroke="#7C3AED"
+                  strokeWidth={2}
+                  dot={<Dot r={3} fill="#7C3AED" />}
+                  activeDot={{ r: 5, fill: "#7C3AED" }}
+                />
+              </LineChart>
             </ResponsiveContainer>
           </div>
         </div>
