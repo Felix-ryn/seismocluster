@@ -1,0 +1,8 @@
+2026-05-25 03:05:13: Migration OK: hierarchy_label column ensured.
+2026-05-25 03:05:13: [Scheduler] ETL otomatis aktif � interval 6 jam.
+2026-05-25 03:05:13: INFO:     127.0.0.1:49466 - "GET /api/v1/scheduler/status HTTP/1.1" 200 OK
+2026-05-25 03:05:15: INFO:     127.0.0.1:49466 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+2026-05-25 03:05:20: INFO:     127.0.0.1:52374 - "GET /api/v1/scheduler/status HTTP/1.1" 200 OK
+2026-05-25 03:05:22: INFO:     127.0.0.1:52374 - "GET /api/v1/scheduler/status HTTP/1.1" 200 OK
+2026-05-25 03:05:28: INFO:     127.0.0.1:63538 - "GET /api/v1/scheduler/status HTTP/1.1" 200 OK
+2026-05-25 03:05:29: INFO:     127.0.0.1:63538 - "GET /api/v1/scheduler/status HTTP/1.1" 200 OK

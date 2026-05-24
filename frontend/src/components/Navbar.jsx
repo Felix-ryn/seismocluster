@@ -7,17 +7,19 @@ import {
   AlertTriangle,
   Activity,
   Waves,
+  Network,
   Menu,
 } from "lucide-react";
 
 const NAV_ITEMS = [
-  { path: "/dashboard",          icon: LayoutDashboard, label: "Dashboard",  end: true                               },
-  { path: "/dashboard/centroid", icon: Crosshair,       label: "Centroid"                                            },
-  { path: "/dashboard/hotspot",  icon: Flame,           label: "Hotspot"                                             },
-  { path: "/dashboard/trend",    icon: TrendingUp,      label: "Trend"                                               },
-  { path: "/dashboard/anomaly",  icon: AlertTriangle,   label: "Anomaly",   badge: null,   badgeType: "danger"       },
-  { path: "/dashboard/realtime", icon: Activity,        label: "Realtime",  badge: "LIVE", badgeType: "success"      },
-  { path: "/dashboard/movement", icon: Waves,           label: "Movement"                                            },
+  { path: "/dashboard",           icon: LayoutDashboard, label: "Dashboard",  end: true                               },
+  { path: "/dashboard/centroid",  icon: Crosshair,       label: "Centroid"                                            },
+  { path: "/dashboard/hotspot",   icon: Flame,           label: "Hotspot"                                             },
+  { path: "/dashboard/trend",     icon: TrendingUp,      label: "Trend"                                               },
+  { path: "/dashboard/anomaly",   icon: AlertTriangle,   label: "Anomaly",   badge: null,   badgeType: "danger"       },
+  { path: "/dashboard/realtime",  icon: Activity,        label: "Realtime",  badge: "LIVE", badgeType: "success"      },
+  { path: "/dashboard/movement",  icon: Waves,           label: "Movement"                                            },
+  { path: "/dashboard/hierarchy", icon: Network,         label: "Hierarchy"                                           },
 ];
 
 export default function Navbar({ collapsed, onToggle, anomalyCount = 0 }) {

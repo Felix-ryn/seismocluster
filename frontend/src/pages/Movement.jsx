@@ -62,13 +62,13 @@ export default function Movement() {
       {data.length > 0 && (
         <div className="panel">
           <p className="panel-title">Distribusi Magnitudo vs Kedalaman per Cluster</p>
-          <p style={{ fontSize: 11, color: "#94A3B8", marginBottom: 16 }}>
+          <p style={{ fontSize: 11, color: "rgba(148,163,184,0.6)", marginBottom: 16 }}>
             Sumbu X = Magnitudo (SR) · Sumbu Y = Kedalaman (km) · Setiap titik = 1 gempa
           </p>
           <div style={{ height: 360 }}>
             <ResponsiveContainer width="100%" height="100%">
               <ScatterChart margin={{ top: 4, right: 24, left: 0, bottom: 4 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#E4E8F2" />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
                 <XAxis
                   dataKey="magnitude"
                   name="Magnitudo"
@@ -87,7 +87,7 @@ export default function Movement() {
                 />
                 <ZAxis range={[20, 20]} />
                 <Tooltip
-                  contentStyle={{ background: "#fff", border: "1px solid #E4E8F2", borderRadius: "8px", fontSize: "12px" }}
+                  contentStyle={{ background: "#ffffff", border: "1px solid rgba(0,0,0,0.10)", borderRadius: "8px", fontSize: "12px", color: "#1e293b" }}
                   cursor={{ strokeDasharray: "3 3" }}
                   formatter={(val, name) => [
                     name === "Magnitudo" ? `${val} SR` : `${val} km`,
