@@ -9,6 +9,7 @@ import Movement from "./pages/Movement";
 import Anomaly from "./pages/Anomaly";
 import Trend from "./pages/Trend";
 import Realtime from "./pages/Realtime";
+import Hierarchy from "./pages/Hierarchy";
 import Landing from "./pages/Landing";
 import "./App.scss";
 
@@ -46,6 +47,7 @@ export default function App() {
           <Route path="anomaly" element={<Anomaly />} />
           <Route path="trend" element={<Trend />} />
           <Route path="realtime" element={<Realtime />} />
+          <Route path="hierarchy" element={<Hierarchy />} />
         </Route>
       </Routes>
     </BrowserRouter>

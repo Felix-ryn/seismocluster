@@ -84,6 +84,16 @@ def insert_earthquakes_bulk(data_list):
     return len(values)
 
 
+def get_latest_earthquake_time():
+    """Kembalikan waktu gempa terbaru di raw_earthquakes, atau None jika tabel kosong."""
+    conn, cursor = get_cursor()
+    cursor.execute("SELECT MAX(time) AS latest FROM raw_earthquakes")
+    result = cursor.fetchone()
+    cursor.close()
+    conn.close()
+    return result["latest"] if result and result["latest"] else None
+
+
 def get_all_earthquakes(limit=500, offset=0, indonesia_only=False):
     conn, cursor = get_cursor()
     where = """
@@ -214,6 +224,35 @@ def get_cluster_result_count():
     cursor.close()
     conn.close()
     return result['total']
+
+
+def get_hierarchy_summary():
+    """Statistik per zona hierarchical clustering (Ward linkage)."""
+    conn, cursor = get_cursor()
+    cursor.execute("""
+        SELECT
+            ec.hierarchy_label,
+            COUNT(*) AS total_earthquakes,
+            AVG(re.magnitude) AS avg_magnitude,
+            AVG(re.depth) AS avg_depth
+        FROM earthquake_clusters ec
+        JOIN raw_earthquakes re ON ec.id = re.id
+        WHERE ec.hierarchy_label IS NOT NULL
+        GROUP BY ec.hierarchy_label
+        ORDER BY ec.hierarchy_label ASC
+    """)
+    data = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return [
+        {
+            "hierarchy_label": int(d["hierarchy_label"]),
+            "total_earthquakes": int(d["total_earthquakes"]),
+            "avg_magnitude": round(float(d["avg_magnitude"]), 4) if d["avg_magnitude"] else 0.0,
+            "avg_depth": round(float(d["avg_depth"]), 4) if d["avg_depth"] else 0.0,
+        }
+        for d in data
+    ]
 
 
 def get_anomaly_earthquakes(limit=200):

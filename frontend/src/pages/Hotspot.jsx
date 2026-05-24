@@ -56,11 +56,11 @@ export default function Hotspot() {
             <div style={{ height: 260 }}>
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={chartData} margin={{ top: 4, right: 16, left: 0, bottom: 4 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#E4E8F2" vertical={false} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" vertical={false} />
                   <XAxis dataKey="name" tick={{ fontSize: 9, fill: "#94A3B8" }} />
                   <YAxis tick={{ fontSize: 9, fill: "#94A3B8" }} />
                   <Tooltip
-                    contentStyle={{ background: "#fff", border: "1px solid #E4E8F2", borderRadius: "8px", fontSize: "12px" }}
+                    contentStyle={{ background: "#ffffff", border: "1px solid rgba(0,0,0,0.10)", borderRadius: "8px", fontSize: "12px", color: "#1e293b" }}
                     formatter={(val) => [val, "Jumlah Gempa"]}
                   />
                   <Bar dataKey="count" radius={[4, 4, 0, 0]}>
