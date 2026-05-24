@@ -22,6 +22,7 @@
 .page-content {
   flex: 1;
   padding: 18px 22px;
+  background: var(--bg-page);
 }
 
 // ── Sidebar ───────────────────────────────────────────────────
@@ -159,8 +160,9 @@
 // ── Topbar ────────────────────────────────────────────────────
 .topbar {
   height: 58px;
-  background: #ffffff;
-  border-bottom: 1px solid var(--border-card);
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(0,0,0,0.08);
   display: flex;
   align-items: center;
   gap: 16px;
@@ -304,17 +306,17 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: var(--bg-card);
+  background: #ffffff;
   color: var(--text-body);
-  border: 1.5px solid var(--border-card);
+  border: 1.5px solid rgba(0,0,0,0.12);
   border-radius: 8px;
   padding: 8px 14px;
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
   font-family: var(--font-base);
-  transition: border-color 0.15s;
-  &:hover    { border-color: var(--accent-primary); color: var(--accent-primary); }
+  transition: border-color 0.15s, background 0.15s;
+  &:hover    { background: #f8fafc; border-color: var(--accent-primary); color: var(--accent-primary); }
   &:disabled { opacity: .6; cursor: not-allowed; }
 }
 
@@ -331,8 +333,8 @@
   border-radius: 8px;
   font-size: 13px;
   margin-bottom: 14px;
-  &--success { background: var(--ev-normal);  color: #166534;   border: 1px solid #86EFAC; }
-  &--error   { background: var(--ev-anomaly); color: #991B1B;   border: 1px solid #FECACA; }
+  &--success { background: rgba(16,185,129,0.08); color: #059669; border: 1px solid rgba(16,185,129,0.22); }
+  &--error   { background: rgba(239,68,68,0.08);  color: #DC2626; border: 1px solid rgba(239,68,68,0.22);  }
 }
 .status-msg-close {
   background: none;
@@ -522,7 +524,7 @@
   font-size: 12px;
 
   th {
-    background: #F8FAFF;
+    background: rgba(0,0,0,0.03);
     color: var(--text-muted);
     font-size: 9px;
     font-weight: 700;
@@ -530,19 +532,19 @@
     letter-spacing: .05em;
     padding: 8px 10px;
     text-align: left;
-    border-bottom: 1px solid var(--border-card);
+    border-bottom: 1px solid rgba(0,0,0,0.07);
     white-space: nowrap;
   }
 
   td {
     padding: 8px 10px;
-    border-bottom: 1px solid var(--border-card);
+    border-bottom: 1px solid rgba(0,0,0,0.05);
     color: var(--text-body);
     vertical-align: middle;
   }
 
   tr:last-child td { border-bottom: none; }
-  tr:hover td      { background: #F8FAFF; }
+  tr:hover td      { background: rgba(0,0,0,0.02); }
 }
 
 .td-mono {
@@ -558,8 +560,8 @@
   white-space: nowrap;
 }
 
-.row-anomaly td { background: #FFF5F5; }
-.row-anomaly:hover td { background: #FEE2E2; }
+.row-anomaly td { background: rgba(239,68,68,0.05); }
+.row-anomaly:hover td { background: rgba(239,68,68,0.09); }
 
 // ── Magnitude Badge ───────────────────────────────────────────
 .mag-badge {
@@ -639,7 +641,7 @@
   width: 28px;
   height: 28px;
   border-radius: 7px;
-  background: rgba(255,255,255,.7);
+  background: rgba(0,0,0,0.05);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -676,7 +678,7 @@
 .progress-bar {
   width: 80px;
   height: 6px;
-  background: var(--bg-input);
+  background: rgba(0,0,0,0.08);
   border-radius: 9999px;
   overflow: hidden;
   flex-shrink: 0;
@@ -699,10 +701,34 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: .04em;
-  &--high   { background: var(--mag-hi-bg);  color: var(--mag-hi-text);  }
-  &--medium { background: var(--mag-md-bg);  color: var(--mag-md-text);  }
-  &--low    { background: var(--mag-lo-bg);  color: var(--mag-lo-text);  }
+  &--high   { background: rgba(239,68,68,0.10);  color: #DC2626;  border: 1px solid rgba(239,68,68,0.22);  }
+  &--medium { background: rgba(245,158,11,0.10); color: #B45309;  border: 1px solid rgba(245,158,11,0.22); }
+  &--low    { background: rgba(16,185,129,0.10); color: #059669;  border: 1px solid rgba(16,185,129,0.22); }
 }
+
+// ── Anomaly stats ─────────────────────────────────────────────
+.anomaly-stats-strip {
+  background: #ffffff;
+  border-color: rgba(0,0,0,0.08);
+}
+
+// ── Map empty state ───────────────────────────────────────────
+.map-empty p {
+  background: rgba(255,255,255,0.95) !important;
+  border-color: rgba(0,0,0,0.10) !important;
+  color: var(--text-muted) !important;
+}
+
+// ── Leaflet popup ─────────────────────────────────────────────
+.leaflet-popup-content-wrapper {
+  background: #ffffff !important;
+  border: 1px solid rgba(0,0,0,0.10) !important;
+  border-radius: 10px !important;
+  box-shadow: 0 4px 16px rgba(0,0,0,.12) !important;
+  color: var(--text-body) !important;
+}
+.leaflet-popup-tip { background: #ffffff !important; }
+.leaflet-popup-close-button { color: var(--text-muted) !important; }
 
 // ── Utility ───────────────────────────────────────────────────
 .loading-text  { font-size: 13px; color: var(--text-muted); padding: 8px 0; }

@@ -1,12 +1,9 @@
-import pandas as pd
-import numpy as np
-from datetime import datetime
 from sqlalchemy.orm import Session
 from sqlalchemy import text
 
 from app.models.pipeline import SeismoPipeline
-from app.models.clustering.evaluation import ClusterEvaluator
 from app.etl.pipeline import run_pipeline as run_etl
+from app.services.ml_service import run_clustering
 
 
 class ClusterService:
@@ -24,9 +21,14 @@ class ClusterService:
         }
 
     def execute_ml_pipeline(self):
-        """Orkestrasi: Load -> Preprocess -> Predict (MLflow champion) -> Save ke DB"""
+        """
+        Orkestrasi penuh:
+          1. Load raw_earthquakes → preprocessing → simpan ke processed_earthquakes
+          2. ml_service.run_clustering() → baca processed_earthquakes
+             → predict MLflow @champion → simpan ke earthquake_clusters + cluster_summary
+        """
 
-        # 1. LOAD DATA (semua data Indonesia, tanpa limit)
+        # 1. LOAD dari raw_earthquakes (Indonesia only)
         df = self.pipeline.load_from_db(self.db)
 
         if df.empty:
@@ -35,35 +37,19 @@ class ClusterService:
                 "message": "Data gempa Indonesia kosong. Jalankan POST /clusters/etl terlebih dahulu."
             }
 
-        # 2. PREPROCESSING — fit scaler baru dari data saat ini
+        # 2. PREPROCESSING — fit scaler baru, tambah fitur temporal & scaled
         df = self.pipeline.prepare_features(df, is_training=True)
 
-        # 3. PREDICT menggunakan model MLflow @champion
-        #    (Hierarchical Clustering + Isolation Forest)
-        df = self.pipeline.predict_all(df)
-        total_anomali = int(df['is_anomaly'].sum())
-
-        # 4. EVALUASI semua model clustering menggunakan koordinat radian
-        coords_radians = df[['lat_radian', 'lon_radian']].values
-        eval_kmeans = ClusterEvaluator.evaluate_model(
-            "KMeans (MLflow Champion)",
-            coords_radians,
-            df['zona_klaster'].values
-        )
-        eval_hierarchy = ClusterEvaluator.evaluate_model(
-            "Hierarchical (MLflow Champion)",
-            coords_radians,
-            df['hierarchy_label'].values
-        )
-
-        # 5. SAVE ke PostgreSQL
+        # 3. TRUNCATE semua result tables lalu simpan ke processed_earthquakes
         try:
             connection = self.db.connection()
+            connection.execute(text(
+                "ALTER TABLE earthquake_clusters ADD COLUMN IF NOT EXISTS hierarchy_label INTEGER;"
+            ))
             connection.execute(text(
                 "TRUNCATE TABLE processed_earthquakes, earthquake_clusters, cluster_summary CASCADE;"
             ))
 
-            # A. processed_earthquakes
             cols_processed = [
                 'id', 'time', 'latitude', 'longitude', 'depth', 'magnitude',
                 'year', 'month', 'day',
@@ -72,47 +58,12 @@ class ClusterService:
             df[cols_processed].to_sql(
                 'processed_earthquakes', con=connection, if_exists='append', index=False
             )
-
-            # B. cluster_summary — berdasarkan zona_klaster dari Hierarchical
-            df_summary = df.groupby('zona_klaster').agg(
-                total_earthquakes=('id', 'count'),
-                avg_magnitude=('magnitude', 'mean'),
-                avg_depth=('depth', 'mean')
-            ).reset_index()
-            df_summary.rename(columns={'zona_klaster': 'cluster_label'}, inplace=True)
-            df_summary.to_sql(
-                'cluster_summary', con=connection, if_exists='append', index=False
-            )
-
-            # C. earthquake_clusters
-            # Hierarchical tidak mengenal noise, semua titik masuk cluster
-            df_cluster = df[['id', 'zona_klaster', 'is_anomaly']].copy()
-            df_cluster.rename(columns={'zona_klaster': 'cluster_label'}, inplace=True)
-            df_cluster['is_noise'] = False
-            df_cluster['created_at'] = datetime.now()
-            df_cluster.to_sql(
-                'earthquake_clusters', con=connection, if_exists='append', index=False
-            )
-
             self.db.commit()
-
-            return {
-                "status": "success",
-                "model_source": "MLflow @champion (KMeans + Hotspot + Isolation Forest + Hierarchical)",
-                "summary": {
-                    "total_data_processed": len(df),
-                    "kmeans_zones_found": int(df['zona_klaster'].nunique()),
-                    "hotspot_zones_found": int(df['hotspot_zone'].nunique()),
-                    "hierarchy_zones_found": int(df['hierarchy_label'].nunique()),
-                    "anomaly_alerts_detected": total_anomali
-                },
-                "evaluation_metrics": {
-                    "kmeans": eval_kmeans,
-                    "hierarchical": eval_hierarchy
-                }
-            }
 
         except Exception as e:
             self.db.rollback()
-            print(f"Database Error: {e}")
+            print(f"Database Error (preprocessing): {e}")
             raise e
+
+        # 4. ML: baca processed_earthquakes → predict → simpan hasil
+        return run_clustering(self.db)

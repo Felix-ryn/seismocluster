@@ -343,6 +343,27 @@ class SeismoPipeline:
         )
 
         # ==========================================
+        # RELABEL CLUSTERS — barat → timur (konsisten lintas training)
+        # KMeans menghasilkan label arbitrary; sort by mean longitude
+        # agar Cluster 0 selalu region paling barat, dst.
+        # ==========================================
+        unique_labels = np.unique(clusters)
+        mean_lons = {
+            lbl: df_processed['longitude'].values[clusters == lbl].mean()
+            for lbl in unique_labels
+        }
+        sorted_labels = sorted(unique_labels, key=lambda l: mean_lons[l])
+        label_map = {old: new for new, old in enumerate(sorted_labels)}
+        clusters = np.array([label_map[c] for c in clusters], dtype=np.int32)
+        print(
+            f"Relabeling cluster selesai: "
+            + ", ".join(
+                f"{old}→{label_map[old]} (lon≈{mean_lons[old]:.1f}°)"
+                for old in sorted_labels
+            )
+        )
+
+        # ==========================================
         # HOTSPOT DETECTION
         # Hotspot model (DBSCAN Haversine) butuh
         # koordinat radian 2D: [lat_rad, lon_rad]

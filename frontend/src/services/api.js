@@ -30,3 +30,7 @@ export const getSummary = () =>
 
 export const getSummaryStats = () =>
   API.get("/api/v1/summary/stats");
+
+// ── Hierarchy ─────────────────────────────────────────────────
+export const getHierarchySummary = () =>
+  API.get("/api/v1/clusters/hierarchy/summary");

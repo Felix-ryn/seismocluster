@@ -25,16 +25,16 @@
   --card-green:  linear-gradient(135deg, #059669, #10B981);
 
   /* ── SURFACES ── */
-  --bg-page:      #F2F4FC;
+  --bg-page:      #f1f5f9;
   --bg-card:      #ffffff;
-  --bg-input:     #F2F4FC;
-  --border-card:  #E4E8F2;
-  --border-input: #E4E8F2;
+  --bg-input:     #f8fafc;
+  --border-card:  rgba(0,0,0,0.08);
+  --border-input: rgba(0,0,0,0.12);
 
   /* ── TYPOGRAPHY ── */
-  --text-heading:  #12122a;
-  --text-body:     #475569;
-  --text-muted:    #94A3B8;
+  --text-heading:  #0f172a;
+  --text-body:     rgba(30,41,59,0.90);
+  --text-muted:    rgba(100,116,139,0.80);
   --text-on-accent:#FFFFFF;
 
   /* ── FONT ── */
@@ -53,20 +53,20 @@
   --cluster-anomaly: #EF4444;
 
   /* ── MAGNITUDE BADGES ── */
-  --mag-lo-bg:   #DCFCE7; --mag-lo-text: #166534;
-  --mag-md-bg:   #FEF9C3; --mag-md-text: #854D0E;
-  --mag-hi-bg:   #FEE2E2; --mag-hi-text: #991B1B;
+  --mag-lo-bg:   rgba(16,185,129,0.12);  --mag-lo-text: #059669;
+  --mag-md-bg:   rgba(245,158,11,0.12);  --mag-md-text: #B45309;
+  --mag-hi-bg:   rgba(239,68,68,0.12);   --mag-hi-text: #DC2626;
 
   /* ── LIVE BADGE ── */
-  --live-bg:     #DCFCE7;
-  --live-border: #86EFAC;
-  --live-text:   #166534;
-  --live-dot:    #16A34A;
+  --live-bg:     rgba(16,185,129,0.10);
+  --live-border: rgba(16,185,129,0.30);
+  --live-text:   #059669;
+  --live-dot:    #10B981;
 
   /* ── EVENT ITEM BACKGROUNDS ── */
-  --ev-anomaly: #FEE2E2;
-  --ev-high:    #EDE9FE;
-  --ev-normal:  #DCFCE7;
+  --ev-anomaly: rgba(239,68,68,0.10);
+  --ev-high:    rgba(124,58,237,0.10);
+  --ev-normal:  rgba(16,185,129,0.08);
 
   /* ── Legacy DESIGN.md tokens (Map.jsx dark theme) ── */
   --color-ink-deep:        #1f1633;

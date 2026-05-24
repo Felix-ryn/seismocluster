@@ -7,7 +7,8 @@ from app.services.cluster_service import ClusterService
 from app.repositories.earthquake_repository import (
     get_cluster_results,
     get_cluster_result_count,
-    get_anomaly_earthquakes
+    get_anomaly_earthquakes,
+    get_hierarchy_summary,
 )
 
 router = APIRouter(
@@ -94,6 +95,21 @@ def get_results(
             "data": data
         }
 
+    except Exception as e:
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/hierarchy/summary")
+def get_hierarchy_summary_endpoint():
+    """Statistik per zona hierarchical clustering (Ward linkage)."""
+    try:
+        data = get_hierarchy_summary()
+        return {
+            "status": "success",
+            "total_zones": len(data),
+            "data": data
+        }
     except Exception as e:
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))

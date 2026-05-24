@@ -67,7 +67,7 @@ export default function Trend() {
                 data={trendData}
                 margin={{ top: 8, right: 16, left: 0, bottom: 30 }}
               >
-                <CartesianGrid strokeDasharray="3 3" stroke="#E4E8F2" vertical={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" vertical={false} />
                 <XAxis
                   dataKey="date"
                   tick={{ fontSize: 9, fill: "#94A3B8" }}
@@ -79,10 +79,11 @@ export default function Trend() {
                 <YAxis tick={{ fontSize: 9, fill: "#94A3B8" }} />
                 <Tooltip
                   contentStyle={{
-                    background: "#fff",
-                    border: "1px solid #E4E8F2",
+                    background: "#ffffff",
+                    border: "1px solid rgba(0,0,0,0.10)",
                     borderRadius: "8px",
                     fontSize: "12px",
+                    color: "#1e293b",
                   }}
                   formatter={(val) => [val, "Gempa"]}
                 />
