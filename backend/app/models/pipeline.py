@@ -338,7 +338,7 @@ class SeismoPipeline:
             "Menjalankan KMeans clustering..."
         )
 
-        clusters = self.clustering_model.fit_predict(
+        clusters = self.clustering_model.predict(
             coords_radians
         )
 
