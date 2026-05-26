@@ -107,27 +107,27 @@ def get_model_status():
 
         for model_name in [cluster_model_name, hotspot_model_name, anomaly_model_name, hierarchy_model_name]:
             try:
-                versions = client.search_model_versions(f"name='{model_name}'")
-                champion = None
-                for v in versions:
-                    if "champion" in (v.aliases or []):
-                        champion = v
-                        break
-
+                champion = client.get_model_version_by_alias(model_name, "champion")
                 models_info.append({
                     "name": model_name,
                     "status": "available",
-                    "total_versions": len(versions),
-                    "champion_version": champion.version if champion else None,
-                    "champion_run_id": champion.run_id if champion else None,
-                    "champion_status": champion.status if champion else None
+                    "champion_version": champion.version,
+                    "champion_run_id": champion.run_id,
+                    "champion_status": champion.status,
                 })
-            except Exception as model_err:
-                models_info.append({
-                    "name": model_name,
-                    "status": "not_found",
-                    "error": str(model_err)
-                })
+            except mlflow.exceptions.MlflowException as model_err:
+                if "RESOURCE_DOES_NOT_EXIST" in str(model_err) or "not found" in str(model_err).lower():
+                    models_info.append({
+                        "name": model_name,
+                        "status": "no_champion",
+                        "error": "Alias 'champion' belum di-set di MLflow Registry"
+                    })
+                else:
+                    models_info.append({
+                        "name": model_name,
+                        "status": "not_found",
+                        "error": str(model_err)
+                    })
 
         return {
             "status": "success",
