@@ -1,0 +1,55 @@
+2026-05-25 03:05:13: Migration OK: hierarchy_label column ensured.
+2026-05-25 03:05:13: [Scheduler] ETL otomatis aktif � interval 6 jam.
+2026-05-25 03:05:13: INFO:     127.0.0.1:49466 - "GET /api/v1/scheduler/status HTTP/1.1" 200 OK
+2026-05-25 03:05:15: INFO:     127.0.0.1:49466 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+2026-05-25 03:05:20: INFO:     127.0.0.1:52374 - "GET /api/v1/scheduler/status HTTP/1.1" 200 OK
+2026-05-25 03:05:22: INFO:     127.0.0.1:52374 - "GET /api/v1/scheduler/status HTTP/1.1" 200 OK
+2026-05-25 03:05:28: INFO:     127.0.0.1:63538 - "GET /api/v1/scheduler/status HTTP/1.1" 200 OK
+2026-05-25 03:05:29: INFO:     127.0.0.1:63538 - "GET /api/v1/scheduler/status HTTP/1.1" 200 OK
+2026-05-25 12:28:05: Migration OK: hierarchy_label column ensured.
+2026-05-25 12:28:05: [Scheduler] ETL otomatis aktif � interval 6 jam.
+2026-05-25 12:28:05: INFO:     127.0.0.1:65320 - "GET /api/v1/summary/ HTTP/1.1" 200 OK
+2026-05-25 12:28:05: INFO:     127.0.0.1:63746 - "GET /api/v1/clusters/anomalies?limit=500 HTTP/1.1" 200 OK
+2026-05-25 12:28:05: INFO:     127.0.0.1:63234 - "GET /api/v1/summary/ HTTP/1.1" 200 OK
+2026-05-25 12:28:05: INFO:     127.0.0.1:60807 - "GET /api/v1/summary/stats HTTP/1.1" 200 OK
+2026-05-25 12:28:05: INFO:     127.0.0.1:57008 - "GET /api/v1/clusters/results?limit=500&offset=0 HTTP/1.1" 200 OK
+2026-05-25 12:28:05: INFO:     127.0.0.1:65320 - "GET /api/v1/clusters/anomalies?limit=500 HTTP/1.1" 200 OK
+2026-05-25 12:28:05: INFO:     127.0.0.1:63234 - "GET /api/v1/summary/stats HTTP/1.1" 200 OK
+2026-05-25 12:28:05: INFO:     127.0.0.1:60807 - "GET /api/v1/clusters/results?limit=500&offset=0 HTTP/1.1" 200 OK
+2026-05-25 12:28:22: ==================================================
+2026-05-25 12:28:22: START ETL PIPELINE
+2026-05-25 12:28:22: Scaler berhasil dimuat
+2026-05-25 12:28:22: Starting ETL Pipeline...
+2026-05-25 12:28:22: Incremental update dari 2026-05-22 (overlap 2 hari)
+2026-05-25 12:28:22: Mode: Incremental dari 2026-05-22
+2026-05-25 12:28:22:   [2026-05] 58 gempa
+2026-05-25 12:28:22: Total: 58 gempa dari 1 chunk
+2026-05-25 12:28:22: Extracted: 58 records
+2026-05-25 12:28:22: Transformed: 58 records
+2026-05-25 12:28:22: Data loaded: 58 baru disimpan
+2026-05-25 12:28:22: ETL Pipeline finished!
+2026-05-25 12:28:22: ETL SELESAI
+2026-05-25 12:28:22: ==================================================
+2026-05-25 12:28:22: INFO:     127.0.0.1:51017 - "POST /api/v1/clusters/etl HTTP/1.1" 200 OK
+2026-05-25 12:28:22: INFO:     127.0.0.1:51509 - "GET /api/v1/summary/ HTTP/1.1" 200 OK
+2026-05-25 12:28:22: INFO:     127.0.0.1:51017 - "GET /api/v1/summary/stats HTTP/1.1" 200 OK
+2026-05-25 12:28:22: INFO:     127.0.0.1:53714 - "GET /api/v1/clusters/anomalies?limit=500 HTTP/1.1" 200 OK
+2026-05-25 12:28:22: INFO:     127.0.0.1:55039 - "GET /api/v1/clusters/results?limit=500&offset=0 HTTP/1.1" 200 OK
+2026-05-25 13:01:22: Migration OK: hierarchy_label column ensured.
+2026-05-25 13:01:22: [Scheduler] ETL otomatis aktif � interval 6 jam.
+2026-05-25 13:01:22: INFO:     127.0.0.1:62787 - "GET /api/v1/summary/ HTTP/1.1" 200 OK
+2026-05-25 13:01:22: INFO:     127.0.0.1:55291 - "GET /api/v1/summary/stats HTTP/1.1" 200 OK
+2026-05-25 13:01:22: INFO:     127.0.0.1:52716 - "GET /api/v1/clusters/anomalies?limit=500 HTTP/1.1" 200 OK
+2026-05-25 13:01:22: INFO:     127.0.0.1:54172 - "GET /api/v1/summary/ HTTP/1.1" 200 OK
+2026-05-25 13:01:22: INFO:     127.0.0.1:52232 - "GET /api/v1/clusters/results?limit=500&offset=0 HTTP/1.1" 200 OK
+2026-05-25 13:01:22: INFO:     127.0.0.1:55291 - "GET /api/v1/clusters/anomalies?limit=500 HTTP/1.1" 200 OK
+2026-05-25 13:01:22: INFO:     127.0.0.1:62787 - "GET /api/v1/summary/stats HTTP/1.1" 200 OK
+2026-05-25 13:01:22: INFO:     127.0.0.1:54172 - "GET /api/v1/clusters/results?limit=500&offset=0 HTTP/1.1" 200 OK
+2026-05-25 13:04:43: INFO:     127.0.0.1:65502 - "GET /api/v1/summary/ HTTP/1.1" 200 OK
+2026-05-25 13:04:43: INFO:     127.0.0.1:62977 - "GET /api/v1/summary/stats HTTP/1.1" 200 OK
+2026-05-25 13:04:43: INFO:     127.0.0.1:57624 - "GET /api/v1/clusters/anomalies?limit=500 HTTP/1.1" 200 OK
+2026-05-25 13:04:43: INFO:     127.0.0.1:62255 - "GET /api/v1/summary/ HTTP/1.1" 200 OK
+2026-05-25 13:04:43: INFO:     127.0.0.1:50645 - "GET /api/v1/clusters/results?limit=500&offset=0 HTTP/1.1" 200 OK
+2026-05-25 13:04:43: INFO:     127.0.0.1:62977 - "GET /api/v1/clusters/anomalies?limit=500 HTTP/1.1" 200 OK
+2026-05-25 13:04:43: INFO:     127.0.0.1:65502 - "GET /api/v1/summary/stats HTTP/1.1" 200 OK
+2026-05-25 13:04:43: INFO:     127.0.0.1:62255 - "GET /api/v1/clusters/results?limit=500&offset=0 HTTP/1.1" 200 OK
