@@ -34,3 +34,7 @@ export const getSummaryStats = () =>
 // ── Hierarchy ─────────────────────────────────────────────────
 export const getHierarchySummary = () =>
   API.get("/api/v1/clusters/hierarchy/summary");
+
+// ── Scheduler ─────────────────────────────────────────────────
+export const getSchedulerStatus = () =>
+  API.get("/api/v1/scheduler/status");

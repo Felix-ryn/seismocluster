@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback, useMemo } from "react";
 import {
   getClusterResults, getSummary, getSummaryStats,
-  getAnomalies, runETL, runTraining,
+  getAnomalies, runETL, runTraining, getSchedulerStatus,
 } from "../services/api";
 import Map from "../components/Map";
 import StatCard from "../components/StatCard";
@@ -10,8 +10,15 @@ import MagBadge from "../components/MagBadge";
 import ClusterBadge from "../components/ClusterBadge";
 import {
   Activity, Layers, AlertOctagon, MapPin,
-  Database, Cpu, Loader2, AlertTriangle,
+  Database, Cpu, Loader2, AlertTriangle, Clock, Flame,
 } from "lucide-react";
+
+const MAG_FILTERS = [
+  { label: "Semua", value: 0 },
+  { label: "M3+",   value: 3 },
+  { label: "M4+",   value: 4 },
+  { label: "M5+",   value: 5 },
+];
 
 export default function ClusterMap() {
   const [points, setPoints]         = useState([]);
@@ -23,6 +30,8 @@ export default function ClusterMap() {
   const [etlLoading, setEtlLoading]     = useState(false);
   const [trainLoading, setTrainLoading] = useState(false);
   const [msg, setMsg]               = useState(null);
+  const [magFilter, setMagFilter]   = useState(0);
+  const [nextEtl, setNextEtl]       = useState(null);
 
   const refreshData = useCallback(async () => {
     setLoading(true);
@@ -45,7 +54,15 @@ export default function ClusterMap() {
     }
   }, []);
 
-  useEffect(() => { refreshData(); }, [refreshData]);
+  useEffect(() => {
+    refreshData();
+    getSchedulerStatus()
+      .then((res) => {
+        const job = res.data.jobs?.find((j) => j.id === "auto_etl");
+        if (job?.next_run) setNextEtl(new Date(job.next_run));
+      })
+      .catch(() => {});
+  }, [refreshData]);
 
   const handleETL = async () => {
     setEtlLoading(true);
@@ -82,11 +99,29 @@ export default function ClusterMap() {
     const extra = anomalies
       .filter(a => !ids.has(a.id))
       .map(a => ({ ...a, is_anomaly: true }));
-    return [...points, ...extra];
-  }, [points, anomalies]);
+    const all = [...points, ...extra];
+    return magFilter > 0 ? all.filter(p => (p.magnitude ?? 0) >= magFilter) : all;
+  }, [points, anomalies, magFilter]);
+
+  const top5 = useMemo(() =>
+    [...points]
+      .filter(p => p.magnitude != null)
+      .sort((a, b) => b.magnitude - a.magnitude)
+      .slice(0, 5),
+    [points]
+  );
 
   const fmtTime = (iso) =>
     iso ? new Date(iso).toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" }) : "";
+
+  const fmtNextEtl = (date) => {
+    if (!date) return null;
+    const diff = date - Date.now();
+    if (diff <= 0) return "sebentar lagi";
+    const h = Math.floor(diff / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    return h > 0 ? `${h}j ${m}m lagi` : `${m}m lagi`;
+  };
 
   return (
     <div>
@@ -104,6 +139,15 @@ export default function ClusterMap() {
           </button>
         </div>
       </div>
+
+      {/* Jadwal ETL Otomatis */}
+      {nextEtl && (
+        <div className="scheduler-info">
+          <Clock size={13} />
+          <span>ETL otomatis berikutnya: <strong>{fmtNextEtl(nextEtl)}</strong></span>
+          <span className="scheduler-time">({nextEtl.toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" })} WIB)</span>
+        </div>
+      )}
 
       {msg && (
         <div className={`status-msg status-msg--${msg.type}`}>
@@ -128,6 +172,20 @@ export default function ClusterMap() {
         {/* Left */}
         <div className="cluster-left">
           <div className="panel panel--flush">
+            {/* Filter Magnitudo */}
+            <div className="mag-filter-bar">
+              <span className="mag-filter-label">Filter:</span>
+              {MAG_FILTERS.map((f) => (
+                <button
+                  key={f.value}
+                  className={`mag-filter-btn${magFilter === f.value ? " mag-filter-btn--active" : ""}`}
+                  onClick={() => setMagFilter(f.value)}
+                >
+                  {f.label}
+                </button>
+              ))}
+              <span className="mag-filter-count">{mapPoints.length} titik</span>
+            </div>
             <Map data={mapPoints} />
           </div>
 
@@ -164,6 +222,32 @@ export default function ClusterMap() {
             <p className="panel-title">Distribusi Cluster</p>
             <DonutChart data={summary} />
           </div>
+
+          {/* Top 5 Gempa Terkuat */}
+          {top5.length > 0 && (
+            <div className="panel">
+              <p className="panel-title">
+                <Flame size={13} style={{ display: "inline", marginRight: 6, color: "#F97316" }} />
+                Top 5 Gempa Terkuat
+              </p>
+              {top5.map((p, i) => (
+                <div key={p.id ?? i} className="event-item">
+                  <div className="event-rank">#{i + 1}</div>
+                  <div className="event-info">
+                    <div className="event-place">{p.place || "Unknown"}</div>
+                    <div className="event-meta">
+                      {p.latitude?.toFixed(2)}°/{p.longitude?.toFixed(2)}°
+                      {p.depth != null ? ` · ${p.depth} km` : ""}
+                    </div>
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 4 }}>
+                    <MagBadge magnitude={p.magnitude} />
+                    <ClusterBadge clusterId={p.cluster_label ?? p.cluster_id} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
 
           <div className="panel">
             <p className="panel-title">Event Anomali Terkini</p>
