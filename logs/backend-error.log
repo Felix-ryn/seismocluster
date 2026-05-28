@@ -2286,3 +2286,16 @@
 2026-05-26 23:52:48: INFO:     Waiting for application startup.
 2026-05-26 23:52:50: INFO:     Application startup complete.
 2026-05-26 23:52:50: INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2026-05-27 12:22:54: INFO:     Started server process [23760]
+2026-05-27 12:22:54: INFO:     Waiting for application startup.
+2026-05-27 12:22:55: INFO:     Application startup complete.
+2026-05-27 12:22:55: INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2026-05-27 14:25:16: INFO:     Started server process [20620]
+2026-05-27 14:25:16: INFO:     Waiting for application startup.
+2026-05-27 14:25:16: INFO:     Application startup complete.
+2026-05-27 14:25:16: INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2026-05-28 02:25:21: Run time of job "ETL Otomatis USGS (trigger: interval[6:00:00], next run at: 2026-05-28 08:25:16 +07)" was missed by 0:00:04.506908
+2026-05-28 02:53:06: INFO:     Started server process [9876]
+2026-05-28 02:53:06: INFO:     Waiting for application startup.
+2026-05-28 02:53:07: INFO:     Application startup complete.
+2026-05-28 02:53:07: INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
