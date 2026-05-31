@@ -1,720 +1,216 @@
-2026-05-31 21:40:12: Traceback (most recent call last):
-2026-05-31 21:40:12:   File "<frozen runpy>", line 198, in _run_module_as_main
-2026-05-31 21:40:12:   File "<frozen runpy>", line 88, in _run_code
-2026-05-31 21:40:12:   File "C:\seismocluster\.venv\Scripts\uvicorn.exe\__main__.py", line 7, in <module>
-2026-05-31 21:40:12:   File "C:\seismocluster\.venv\Lib\site-packages\click\core.py", line 1514, in __call__
-2026-05-31 21:40:12:     return self.main(*args, **kwargs)
-2026-05-31 21:40:12:            ^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:40:12:   File "C:\seismocluster\.venv\Lib\site-packages\click\core.py", line 1435, in main
-2026-05-31 21:40:12:     rv = self.invoke(ctx)
-2026-05-31 21:40:12:          ^^^^^^^^^^^^^^^^
-2026-05-31 21:40:12:   File "C:\seismocluster\.venv\Lib\site-packages\click\core.py", line 1298, in invoke
-2026-05-31 21:40:12:     return ctx.invoke(self.callback, **ctx.params)
-2026-05-31 21:40:12:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:40:12:   File "C:\seismocluster\.venv\Lib\site-packages\click\core.py", line 853, in invoke
-2026-05-31 21:40:12:     return callback(*args, **kwargs)
-2026-05-31 21:40:12:            ^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:40:12:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\main.py", line 441, in main
-2026-05-31 21:40:12:     run(
-2026-05-31 21:40:12:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\main.py", line 617, in run
-2026-05-31 21:40:12:     server.run()
-2026-05-31 21:40:12:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\server.py", line 75, in run
-2026-05-31 21:40:12:     return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
-2026-05-31 21:40:12:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:40:12:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\_compat.py", line 30, in asyncio_run
-2026-05-31 21:40:12:     return runner.run(main)
-2026-05-31 21:40:12:            ^^^^^^^^^^^^^^^^
-2026-05-31 21:40:12:   File "C:\Users\USER\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py", line 118, in run
-2026-05-31 21:40:12:     return self._loop.run_until_complete(task)
-2026-05-31 21:40:12:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:40:12:   File "C:\Users\USER\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 654, in run_until_complete
-2026-05-31 21:40:12:     return future.result()
-2026-05-31 21:40:12:            ^^^^^^^^^^^^^^^
-2026-05-31 21:40:12:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\server.py", line 79, in serve
-2026-05-31 21:40:12:     await self._serve(sockets)
-2026-05-31 21:40:12:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\server.py", line 86, in _serve
-2026-05-31 21:40:12:     config.load()
-2026-05-31 21:40:12:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\config.py", line 449, in load
-2026-05-31 21:40:12:     self.loaded_app = import_from_string(self.app)
-2026-05-31 21:40:12:                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:40:12:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\importer.py", line 19, in import_from_string
-2026-05-31 21:40:12:     module = importlib.import_module(module_str)
-2026-05-31 21:40:12:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:40:12:   File "C:\Users\USER\AppData\Local\Programs\Python\Python311\Lib\importlib\__init__.py", line 126, in import_module
-2026-05-31 21:40:12:     return _bootstrap._gcd_import(name[level:], package, level)
-2026-05-31 21:40:12:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:40:12:   File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
-2026-05-31 21:40:12:   File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
-2026-05-31 21:40:12:   File "<frozen importlib._bootstrap>", line 1147, in _find_and_load_unlocked
-2026-05-31 21:40:12:   File "<frozen importlib._bootstrap>", line 690, in _load_unlocked
-2026-05-31 21:40:12:   File "<frozen importlib._bootstrap_external>", line 940, in exec_module
-2026-05-31 21:40:12:   File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
-2026-05-31 21:40:12:   File "C:\seismocluster\backend\api\main.py", line 8, in <module>
-2026-05-31 21:40:12:     from api.routes import ml, earthquake, cluster, summary
-2026-05-31 21:40:12:   File "C:\seismocluster\backend\api\routes\ml.py", line 8, in <module>
-2026-05-31 21:40:12:     from app.config.database import get_db
-2026-05-31 21:40:12:   File "C:\seismocluster\backend\app\config\database.py", line 24, in <module>
-2026-05-31 21:40:12:     engine = create_engine(DATABASE_URL)
-2026-05-31 21:40:12:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:40:12:   File "<string>", line 2, in create_engine
-2026-05-31 21:40:12:   File "C:\seismocluster\.venv\Lib\site-packages\sqlalchemy\util\deprecations.py", line 281, in warned
-2026-05-31 21:40:12:     return fn(*args, **kwargs)  # type: ignore[no-any-return]
-2026-05-31 21:40:12:            ^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:40:12:   File "C:\seismocluster\.venv\Lib\site-packages\sqlalchemy\engine\create.py", line 564, in create_engine
-2026-05-31 21:40:12:     u = _url.make_url(url)
-2026-05-31 21:40:12:         ^^^^^^^^^^^^^^^^^^
-2026-05-31 21:40:12:   File "C:\seismocluster\.venv\Lib\site-packages\sqlalchemy\engine\url.py", line 856, in make_url
-2026-05-31 21:40:12:     return _parse_url(name_or_url)
-2026-05-31 21:40:12:            ^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:40:12:   File "C:\seismocluster\.venv\Lib\site-packages\sqlalchemy\engine\url.py", line 917, in _parse_url
-2026-05-31 21:40:12:     components["port"] = int(components["port"])
-2026-05-31 21:40:12:                          ^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:40:12: ValueError: invalid literal for int() with base 10: 'None'
-2026-05-31 21:40:29: Traceback (most recent call last):
-2026-05-31 21:40:29:   File "<frozen runpy>", line 198, in _run_module_as_main
-2026-05-31 21:40:29:   File "<frozen runpy>", line 88, in _run_code
-2026-05-31 21:40:29:   File "C:\seismocluster\.venv\Scripts\uvicorn.exe\__main__.py", line 7, in <module>
-2026-05-31 21:40:29:   File "C:\seismocluster\.venv\Lib\site-packages\click\core.py", line 1514, in __call__
-2026-05-31 21:40:29:     return self.main(*args, **kwargs)
-2026-05-31 21:40:29:            ^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:40:29:   File "C:\seismocluster\.venv\Lib\site-packages\click\core.py", line 1435, in main
-2026-05-31 21:40:29:     rv = self.invoke(ctx)
-2026-05-31 21:40:29:          ^^^^^^^^^^^^^^^^
-2026-05-31 21:40:29:   File "C:\seismocluster\.venv\Lib\site-packages\click\core.py", line 1298, in invoke
-2026-05-31 21:40:29:     return ctx.invoke(self.callback, **ctx.params)
-2026-05-31 21:40:29:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:40:29:   File "C:\seismocluster\.venv\Lib\site-packages\click\core.py", line 853, in invoke
-2026-05-31 21:40:29:     return callback(*args, **kwargs)
-2026-05-31 21:40:29:            ^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:40:29:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\main.py", line 441, in main
-2026-05-31 21:40:29:     run(
-2026-05-31 21:40:29:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\main.py", line 617, in run
-2026-05-31 21:40:29:     server.run()
-2026-05-31 21:40:29:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\server.py", line 75, in run
-2026-05-31 21:40:29:     return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
-2026-05-31 21:40:29:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:40:29:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\_compat.py", line 30, in asyncio_run
-2026-05-31 21:40:29:     return runner.run(main)
-2026-05-31 21:40:29:            ^^^^^^^^^^^^^^^^
-2026-05-31 21:40:29:   File "C:\Users\USER\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py", line 118, in run
-2026-05-31 21:40:29:     return self._loop.run_until_complete(task)
-2026-05-31 21:40:29:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:40:29:   File "C:\Users\USER\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 654, in run_until_complete
-2026-05-31 21:40:29:     return future.result()
-2026-05-31 21:40:29:            ^^^^^^^^^^^^^^^
-2026-05-31 21:40:29:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\server.py", line 79, in serve
-2026-05-31 21:40:29:     await self._serve(sockets)
-2026-05-31 21:40:29:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\server.py", line 86, in _serve
-2026-05-31 21:40:29:     config.load()
-2026-05-31 21:40:29:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\config.py", line 449, in load
-2026-05-31 21:40:29:     self.loaded_app = import_from_string(self.app)
-2026-05-31 21:40:29:                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:40:29:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\importer.py", line 19, in import_from_string
-2026-05-31 21:40:29:     module = importlib.import_module(module_str)
-2026-05-31 21:40:29:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:40:29:   File "C:\Users\USER\AppData\Local\Programs\Python\Python311\Lib\importlib\__init__.py", line 126, in import_module
-2026-05-31 21:40:29:     return _bootstrap._gcd_import(name[level:], package, level)
-2026-05-31 21:40:29:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:40:29:   File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
-2026-05-31 21:40:29:   File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
-2026-05-31 21:40:29:   File "<frozen importlib._bootstrap>", line 1147, in _find_and_load_unlocked
-2026-05-31 21:40:29:   File "<frozen importlib._bootstrap>", line 690, in _load_unlocked
-2026-05-31 21:40:29:   File "<frozen importlib._bootstrap_external>", line 940, in exec_module
-2026-05-31 21:40:29:   File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
-2026-05-31 21:40:29:   File "C:\seismocluster\backend\api\main.py", line 8, in <module>
-2026-05-31 21:40:29:     from api.routes import ml, earthquake, cluster, summary
-2026-05-31 21:40:29:   File "C:\seismocluster\backend\api\routes\ml.py", line 8, in <module>
-2026-05-31 21:40:29:     from app.config.database import get_db
-2026-05-31 21:40:29:   File "C:\seismocluster\backend\app\config\database.py", line 24, in <module>
-2026-05-31 21:40:29:     engine = create_engine(DATABASE_URL)
-2026-05-31 21:40:29:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:40:29:   File "<string>", line 2, in create_engine
-2026-05-31 21:40:29:   File "C:\seismocluster\.venv\Lib\site-packages\sqlalchemy\util\deprecations.py", line 281, in warned
-2026-05-31 21:40:29:     return fn(*args, **kwargs)  # type: ignore[no-any-return]
-2026-05-31 21:40:29:            ^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:40:29:   File "C:\seismocluster\.venv\Lib\site-packages\sqlalchemy\engine\create.py", line 564, in create_engine
-2026-05-31 21:40:29:     u = _url.make_url(url)
-2026-05-31 21:40:29:         ^^^^^^^^^^^^^^^^^^
-2026-05-31 21:40:29:   File "C:\seismocluster\.venv\Lib\site-packages\sqlalchemy\engine\url.py", line 856, in make_url
-2026-05-31 21:40:29:     return _parse_url(name_or_url)
-2026-05-31 21:40:29:            ^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:40:29:   File "C:\seismocluster\.venv\Lib\site-packages\sqlalchemy\engine\url.py", line 917, in _parse_url
-2026-05-31 21:40:29:     components["port"] = int(components["port"])
-2026-05-31 21:40:29:                          ^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:40:29: ValueError: invalid literal for int() with base 10: 'None'
-2026-05-31 21:40:41: Traceback (most recent call last):
-2026-05-31 21:40:41:   File "<frozen runpy>", line 198, in _run_module_as_main
-2026-05-31 21:40:41:   File "<frozen runpy>", line 88, in _run_code
-2026-05-31 21:40:41:   File "C:\seismocluster\.venv\Scripts\uvicorn.exe\__main__.py", line 7, in <module>
-2026-05-31 21:40:41:   File "C:\seismocluster\.venv\Lib\site-packages\click\core.py", line 1514, in __call__
-2026-05-31 21:40:41:     return self.main(*args, **kwargs)
-2026-05-31 21:40:41:            ^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:40:41:   File "C:\seismocluster\.venv\Lib\site-packages\click\core.py", line 1435, in main
-2026-05-31 21:40:41:     rv = self.invoke(ctx)
-2026-05-31 21:40:41:          ^^^^^^^^^^^^^^^^
-2026-05-31 21:40:41:   File "C:\seismocluster\.venv\Lib\site-packages\click\core.py", line 1298, in invoke
-2026-05-31 21:40:41:     return ctx.invoke(self.callback, **ctx.params)
-2026-05-31 21:40:41:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:40:41:   File "C:\seismocluster\.venv\Lib\site-packages\click\core.py", line 853, in invoke
-2026-05-31 21:40:41:     return callback(*args, **kwargs)
-2026-05-31 21:40:41:            ^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:40:41:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\main.py", line 441, in main
-2026-05-31 21:40:41:     run(
-2026-05-31 21:40:41:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\main.py", line 617, in run
-2026-05-31 21:40:41:     server.run()
-2026-05-31 21:40:41:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\server.py", line 75, in run
-2026-05-31 21:40:41:     return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
-2026-05-31 21:40:41:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:40:41:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\_compat.py", line 30, in asyncio_run
-2026-05-31 21:40:41:     return runner.run(main)
-2026-05-31 21:40:41:            ^^^^^^^^^^^^^^^^
-2026-05-31 21:40:41:   File "C:\Users\USER\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py", line 118, in run
-2026-05-31 21:40:41:     return self._loop.run_until_complete(task)
-2026-05-31 21:40:41:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:40:41:   File "C:\Users\USER\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 654, in run_until_complete
-2026-05-31 21:40:41:     return future.result()
-2026-05-31 21:40:41:            ^^^^^^^^^^^^^^^
-2026-05-31 21:40:41:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\server.py", line 79, in serve
-2026-05-31 21:40:41:     await self._serve(sockets)
-2026-05-31 21:40:41:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\server.py", line 86, in _serve
-2026-05-31 21:40:41:     config.load()
-2026-05-31 21:40:41:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\config.py", line 449, in load
-2026-05-31 21:40:41:     self.loaded_app = import_from_string(self.app)
-2026-05-31 21:40:41:                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:40:41:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\importer.py", line 19, in import_from_string
-2026-05-31 21:40:41:     module = importlib.import_module(module_str)
-2026-05-31 21:40:41:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:40:41:   File "C:\Users\USER\AppData\Local\Programs\Python\Python311\Lib\importlib\__init__.py", line 126, in import_module
-2026-05-31 21:40:41:     return _bootstrap._gcd_import(name[level:], package, level)
-2026-05-31 21:40:41:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:40:41:   File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
-2026-05-31 21:40:41:   File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
-2026-05-31 21:40:41:   File "<frozen importlib._bootstrap>", line 1147, in _find_and_load_unlocked
-2026-05-31 21:40:41:   File "<frozen importlib._bootstrap>", line 690, in _load_unlocked
-2026-05-31 21:40:41:   File "<frozen importlib._bootstrap_external>", line 940, in exec_module
-2026-05-31 21:40:41:   File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
-2026-05-31 21:40:41:   File "C:\seismocluster\backend\api\main.py", line 8, in <module>
-2026-05-31 21:40:41:     from api.routes import ml, earthquake, cluster, summary
-2026-05-31 21:40:41:   File "C:\seismocluster\backend\api\routes\ml.py", line 8, in <module>
-2026-05-31 21:40:41:     from app.config.database import get_db
-2026-05-31 21:40:41:   File "C:\seismocluster\backend\app\config\database.py", line 24, in <module>
-2026-05-31 21:40:41:     engine = create_engine(DATABASE_URL)
-2026-05-31 21:40:41:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:40:41:   File "<string>", line 2, in create_engine
-2026-05-31 21:40:41:   File "C:\seismocluster\.venv\Lib\site-packages\sqlalchemy\util\deprecations.py", line 281, in warned
-2026-05-31 21:40:41:     return fn(*args, **kwargs)  # type: ignore[no-any-return]
-2026-05-31 21:40:41:            ^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:40:41:   File "C:\seismocluster\.venv\Lib\site-packages\sqlalchemy\engine\create.py", line 564, in create_engine
-2026-05-31 21:40:41:     u = _url.make_url(url)
-2026-05-31 21:40:41:         ^^^^^^^^^^^^^^^^^^
-2026-05-31 21:40:41:   File "C:\seismocluster\.venv\Lib\site-packages\sqlalchemy\engine\url.py", line 856, in make_url
-2026-05-31 21:40:41:     return _parse_url(name_or_url)
-2026-05-31 21:40:41:            ^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:40:41:   File "C:\seismocluster\.venv\Lib\site-packages\sqlalchemy\engine\url.py", line 917, in _parse_url
-2026-05-31 21:40:41:     components["port"] = int(components["port"])
-2026-05-31 21:40:41:                          ^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:40:41: ValueError: invalid literal for int() with base 10: 'None'
-2026-05-31 21:40:51: Traceback (most recent call last):
-2026-05-31 21:40:51:   File "<frozen runpy>", line 198, in _run_module_as_main
-2026-05-31 21:40:51:   File "<frozen runpy>", line 88, in _run_code
-2026-05-31 21:40:51:   File "C:\seismocluster\.venv\Scripts\uvicorn.exe\__main__.py", line 7, in <module>
-2026-05-31 21:40:51:   File "C:\seismocluster\.venv\Lib\site-packages\click\core.py", line 1514, in __call__
-2026-05-31 21:40:51:     return self.main(*args, **kwargs)
-2026-05-31 21:40:51:            ^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:40:51:   File "C:\seismocluster\.venv\Lib\site-packages\click\core.py", line 1435, in main
-2026-05-31 21:40:51:     rv = self.invoke(ctx)
-2026-05-31 21:40:51:          ^^^^^^^^^^^^^^^^
-2026-05-31 21:40:51:   File "C:\seismocluster\.venv\Lib\site-packages\click\core.py", line 1298, in invoke
-2026-05-31 21:40:51:     return ctx.invoke(self.callback, **ctx.params)
-2026-05-31 21:40:51:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:40:51:   File "C:\seismocluster\.venv\Lib\site-packages\click\core.py", line 853, in invoke
-2026-05-31 21:40:51:     return callback(*args, **kwargs)
-2026-05-31 21:40:51:            ^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:40:51:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\main.py", line 441, in main
-2026-05-31 21:40:51:     run(
-2026-05-31 21:40:51:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\main.py", line 617, in run
-2026-05-31 21:40:51:     server.run()
-2026-05-31 21:40:51:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\server.py", line 75, in run
-2026-05-31 21:40:51:     return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
-2026-05-31 21:40:51:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:40:51:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\_compat.py", line 30, in asyncio_run
-2026-05-31 21:40:51:     return runner.run(main)
-2026-05-31 21:40:51:            ^^^^^^^^^^^^^^^^
-2026-05-31 21:40:51:   File "C:\Users\USER\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py", line 118, in run
-2026-05-31 21:40:51:     return self._loop.run_until_complete(task)
-2026-05-31 21:40:51:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:40:51:   File "C:\Users\USER\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 654, in run_until_complete
-2026-05-31 21:40:51:     return future.result()
-2026-05-31 21:40:51:            ^^^^^^^^^^^^^^^
-2026-05-31 21:40:51:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\server.py", line 79, in serve
-2026-05-31 21:40:51:     await self._serve(sockets)
-2026-05-31 21:40:51:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\server.py", line 86, in _serve
-2026-05-31 21:40:51:     config.load()
-2026-05-31 21:40:51:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\config.py", line 449, in load
-2026-05-31 21:40:51:     self.loaded_app = import_from_string(self.app)
-2026-05-31 21:40:51:                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:40:51:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\importer.py", line 19, in import_from_string
-2026-05-31 21:40:51:     module = importlib.import_module(module_str)
-2026-05-31 21:40:51:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:40:51:   File "C:\Users\USER\AppData\Local\Programs\Python\Python311\Lib\importlib\__init__.py", line 126, in import_module
-2026-05-31 21:40:51:     return _bootstrap._gcd_import(name[level:], package, level)
-2026-05-31 21:40:51:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:40:51:   File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
-2026-05-31 21:40:51:   File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
-2026-05-31 21:40:51:   File "<frozen importlib._bootstrap>", line 1147, in _find_and_load_unlocked
-2026-05-31 21:40:51:   File "<frozen importlib._bootstrap>", line 690, in _load_unlocked
-2026-05-31 21:40:51:   File "<frozen importlib._bootstrap_external>", line 940, in exec_module
-2026-05-31 21:40:51:   File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
-2026-05-31 21:40:51:   File "C:\seismocluster\backend\api\main.py", line 8, in <module>
-2026-05-31 21:40:51:     from api.routes import ml, earthquake, cluster, summary
-2026-05-31 21:40:51:   File "C:\seismocluster\backend\api\routes\ml.py", line 8, in <module>
-2026-05-31 21:40:51:     from app.config.database import get_db
-2026-05-31 21:40:51:   File "C:\seismocluster\backend\app\config\database.py", line 24, in <module>
-2026-05-31 21:40:51:     engine = create_engine(DATABASE_URL)
-2026-05-31 21:40:51:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:40:51:   File "<string>", line 2, in create_engine
-2026-05-31 21:40:51:   File "C:\seismocluster\.venv\Lib\site-packages\sqlalchemy\util\deprecations.py", line 281, in warned
-2026-05-31 21:40:51:     return fn(*args, **kwargs)  # type: ignore[no-any-return]
-2026-05-31 21:40:51:            ^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:40:51:   File "C:\seismocluster\.venv\Lib\site-packages\sqlalchemy\engine\create.py", line 564, in create_engine
-2026-05-31 21:40:51:     u = _url.make_url(url)
-2026-05-31 21:40:51:         ^^^^^^^^^^^^^^^^^^
-2026-05-31 21:40:51:   File "C:\seismocluster\.venv\Lib\site-packages\sqlalchemy\engine\url.py", line 856, in make_url
-2026-05-31 21:40:51:     return _parse_url(name_or_url)
-2026-05-31 21:40:51:            ^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:40:51:   File "C:\seismocluster\.venv\Lib\site-packages\sqlalchemy\engine\url.py", line 917, in _parse_url
-2026-05-31 21:40:51:     components["port"] = int(components["port"])
-2026-05-31 21:40:51:                          ^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:40:51: ValueError: invalid literal for int() with base 10: 'None'
-2026-05-31 21:41:00: Traceback (most recent call last):
-2026-05-31 21:41:00:   File "<frozen runpy>", line 198, in _run_module_as_main
-2026-05-31 21:41:00:   File "<frozen runpy>", line 88, in _run_code
-2026-05-31 21:41:00:   File "C:\seismocluster\.venv\Scripts\uvicorn.exe\__main__.py", line 7, in <module>
-2026-05-31 21:41:00:   File "C:\seismocluster\.venv\Lib\site-packages\click\core.py", line 1514, in __call__
-2026-05-31 21:41:00:     return self.main(*args, **kwargs)
-2026-05-31 21:41:00:            ^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:00:   File "C:\seismocluster\.venv\Lib\site-packages\click\core.py", line 1435, in main
-2026-05-31 21:41:00:     rv = self.invoke(ctx)
-2026-05-31 21:41:00:          ^^^^^^^^^^^^^^^^
-2026-05-31 21:41:00:   File "C:\seismocluster\.venv\Lib\site-packages\click\core.py", line 1298, in invoke
-2026-05-31 21:41:00:     return ctx.invoke(self.callback, **ctx.params)
-2026-05-31 21:41:00:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:00:   File "C:\seismocluster\.venv\Lib\site-packages\click\core.py", line 853, in invoke
-2026-05-31 21:41:00:     return callback(*args, **kwargs)
-2026-05-31 21:41:00:            ^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:00:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\main.py", line 441, in main
-2026-05-31 21:41:00:     run(
-2026-05-31 21:41:00:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\main.py", line 617, in run
-2026-05-31 21:41:00:     server.run()
-2026-05-31 21:41:00:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\server.py", line 75, in run
-2026-05-31 21:41:00:     return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
-2026-05-31 21:41:00:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:00:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\_compat.py", line 30, in asyncio_run
-2026-05-31 21:41:00:     return runner.run(main)
-2026-05-31 21:41:00:            ^^^^^^^^^^^^^^^^
-2026-05-31 21:41:00:   File "C:\Users\USER\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py", line 118, in run
-2026-05-31 21:41:00:     return self._loop.run_until_complete(task)
-2026-05-31 21:41:00:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:00:   File "C:\Users\USER\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 654, in run_until_complete
-2026-05-31 21:41:00:     return future.result()
-2026-05-31 21:41:00:            ^^^^^^^^^^^^^^^
-2026-05-31 21:41:00:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\server.py", line 79, in serve
-2026-05-31 21:41:00:     await self._serve(sockets)
-2026-05-31 21:41:00:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\server.py", line 86, in _serve
-2026-05-31 21:41:00:     config.load()
-2026-05-31 21:41:00:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\config.py", line 449, in load
-2026-05-31 21:41:00:     self.loaded_app = import_from_string(self.app)
-2026-05-31 21:41:00:                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:00:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\importer.py", line 19, in import_from_string
-2026-05-31 21:41:00:     module = importlib.import_module(module_str)
-2026-05-31 21:41:00:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:00:   File "C:\Users\USER\AppData\Local\Programs\Python\Python311\Lib\importlib\__init__.py", line 126, in import_module
-2026-05-31 21:41:00:     return _bootstrap._gcd_import(name[level:], package, level)
-2026-05-31 21:41:00:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:00:   File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
-2026-05-31 21:41:00:   File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
-2026-05-31 21:41:00:   File "<frozen importlib._bootstrap>", line 1147, in _find_and_load_unlocked
-2026-05-31 21:41:00:   File "<frozen importlib._bootstrap>", line 690, in _load_unlocked
-2026-05-31 21:41:00:   File "<frozen importlib._bootstrap_external>", line 940, in exec_module
-2026-05-31 21:41:00:   File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
-2026-05-31 21:41:00:   File "C:\seismocluster\backend\api\main.py", line 8, in <module>
-2026-05-31 21:41:00:     from api.routes import ml, earthquake, cluster, summary
-2026-05-31 21:41:00:   File "C:\seismocluster\backend\api\routes\ml.py", line 8, in <module>
-2026-05-31 21:41:00:     from app.config.database import get_db
-2026-05-31 21:41:00:   File "C:\seismocluster\backend\app\config\database.py", line 24, in <module>
-2026-05-31 21:41:00:     engine = create_engine(DATABASE_URL)
-2026-05-31 21:41:00:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:00:   File "<string>", line 2, in create_engine
-2026-05-31 21:41:00:   File "C:\seismocluster\.venv\Lib\site-packages\sqlalchemy\util\deprecations.py", line 281, in warned
-2026-05-31 21:41:00:     return fn(*args, **kwargs)  # type: ignore[no-any-return]
-2026-05-31 21:41:00:            ^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:00:   File "C:\seismocluster\.venv\Lib\site-packages\sqlalchemy\engine\create.py", line 564, in create_engine
-2026-05-31 21:41:00:     u = _url.make_url(url)
-2026-05-31 21:41:00:         ^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:00:   File "C:\seismocluster\.venv\Lib\site-packages\sqlalchemy\engine\url.py", line 856, in make_url
-2026-05-31 21:41:00:     return _parse_url(name_or_url)
-2026-05-31 21:41:00:            ^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:00:   File "C:\seismocluster\.venv\Lib\site-packages\sqlalchemy\engine\url.py", line 917, in _parse_url
-2026-05-31 21:41:00:     components["port"] = int(components["port"])
-2026-05-31 21:41:00:                          ^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:00: ValueError: invalid literal for int() with base 10: 'None'
-2026-05-31 21:41:09: Traceback (most recent call last):
-2026-05-31 21:41:09:   File "<frozen runpy>", line 198, in _run_module_as_main
-2026-05-31 21:41:09:   File "<frozen runpy>", line 88, in _run_code
-2026-05-31 21:41:09:   File "C:\seismocluster\.venv\Scripts\uvicorn.exe\__main__.py", line 7, in <module>
-2026-05-31 21:41:09:   File "C:\seismocluster\.venv\Lib\site-packages\click\core.py", line 1514, in __call__
-2026-05-31 21:41:09:     return self.main(*args, **kwargs)
-2026-05-31 21:41:09:            ^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:09:   File "C:\seismocluster\.venv\Lib\site-packages\click\core.py", line 1435, in main
-2026-05-31 21:41:09:     rv = self.invoke(ctx)
-2026-05-31 21:41:09:          ^^^^^^^^^^^^^^^^
-2026-05-31 21:41:09:   File "C:\seismocluster\.venv\Lib\site-packages\click\core.py", line 1298, in invoke
-2026-05-31 21:41:09:     return ctx.invoke(self.callback, **ctx.params)
-2026-05-31 21:41:09:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:09:   File "C:\seismocluster\.venv\Lib\site-packages\click\core.py", line 853, in invoke
-2026-05-31 21:41:09:     return callback(*args, **kwargs)
-2026-05-31 21:41:09:            ^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:09:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\main.py", line 441, in main
-2026-05-31 21:41:09:     run(
-2026-05-31 21:41:09:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\main.py", line 617, in run
-2026-05-31 21:41:09:     server.run()
-2026-05-31 21:41:09:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\server.py", line 75, in run
-2026-05-31 21:41:09:     return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
-2026-05-31 21:41:09:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:09:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\_compat.py", line 30, in asyncio_run
-2026-05-31 21:41:09:     return runner.run(main)
-2026-05-31 21:41:09:            ^^^^^^^^^^^^^^^^
-2026-05-31 21:41:09:   File "C:\Users\USER\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py", line 118, in run
-2026-05-31 21:41:09:     return self._loop.run_until_complete(task)
-2026-05-31 21:41:09:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:09:   File "C:\Users\USER\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 654, in run_until_complete
-2026-05-31 21:41:09:     return future.result()
-2026-05-31 21:41:09:            ^^^^^^^^^^^^^^^
-2026-05-31 21:41:09:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\server.py", line 79, in serve
-2026-05-31 21:41:09:     await self._serve(sockets)
-2026-05-31 21:41:09:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\server.py", line 86, in _serve
-2026-05-31 21:41:09:     config.load()
-2026-05-31 21:41:09:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\config.py", line 449, in load
-2026-05-31 21:41:09:     self.loaded_app = import_from_string(self.app)
-2026-05-31 21:41:09:                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:09:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\importer.py", line 19, in import_from_string
-2026-05-31 21:41:09:     module = importlib.import_module(module_str)
-2026-05-31 21:41:09:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:09:   File "C:\Users\USER\AppData\Local\Programs\Python\Python311\Lib\importlib\__init__.py", line 126, in import_module
-2026-05-31 21:41:09:     return _bootstrap._gcd_import(name[level:], package, level)
-2026-05-31 21:41:09:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:09:   File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
-2026-05-31 21:41:09:   File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
-2026-05-31 21:41:09:   File "<frozen importlib._bootstrap>", line 1147, in _find_and_load_unlocked
-2026-05-31 21:41:09:   File "<frozen importlib._bootstrap>", line 690, in _load_unlocked
-2026-05-31 21:41:09:   File "<frozen importlib._bootstrap_external>", line 940, in exec_module
-2026-05-31 21:41:09:   File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
-2026-05-31 21:41:09:   File "C:\seismocluster\backend\api\main.py", line 8, in <module>
-2026-05-31 21:41:09:     from api.routes import ml, earthquake, cluster, summary
-2026-05-31 21:41:09:   File "C:\seismocluster\backend\api\routes\ml.py", line 8, in <module>
-2026-05-31 21:41:09:     from app.config.database import get_db
-2026-05-31 21:41:09:   File "C:\seismocluster\backend\app\config\database.py", line 24, in <module>
-2026-05-31 21:41:09:     engine = create_engine(DATABASE_URL)
-2026-05-31 21:41:09:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:09:   File "<string>", line 2, in create_engine
-2026-05-31 21:41:09:   File "C:\seismocluster\.venv\Lib\site-packages\sqlalchemy\util\deprecations.py", line 281, in warned
-2026-05-31 21:41:09:     return fn(*args, **kwargs)  # type: ignore[no-any-return]
-2026-05-31 21:41:09:            ^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:09:   File "C:\seismocluster\.venv\Lib\site-packages\sqlalchemy\engine\create.py", line 564, in create_engine
-2026-05-31 21:41:09:     u = _url.make_url(url)
-2026-05-31 21:41:09:         ^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:09:   File "C:\seismocluster\.venv\Lib\site-packages\sqlalchemy\engine\url.py", line 856, in make_url
-2026-05-31 21:41:09:     return _parse_url(name_or_url)
-2026-05-31 21:41:09:            ^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:09:   File "C:\seismocluster\.venv\Lib\site-packages\sqlalchemy\engine\url.py", line 917, in _parse_url
-2026-05-31 21:41:09:     components["port"] = int(components["port"])
-2026-05-31 21:41:09:                          ^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:09: ValueError: invalid literal for int() with base 10: 'None'
-2026-05-31 21:41:18: Traceback (most recent call last):
-2026-05-31 21:41:18:   File "<frozen runpy>", line 198, in _run_module_as_main
-2026-05-31 21:41:18:   File "<frozen runpy>", line 88, in _run_code
-2026-05-31 21:41:18:   File "C:\seismocluster\.venv\Scripts\uvicorn.exe\__main__.py", line 7, in <module>
-2026-05-31 21:41:18:   File "C:\seismocluster\.venv\Lib\site-packages\click\core.py", line 1514, in __call__
-2026-05-31 21:41:18:     return self.main(*args, **kwargs)
-2026-05-31 21:41:18:            ^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:18:   File "C:\seismocluster\.venv\Lib\site-packages\click\core.py", line 1435, in main
-2026-05-31 21:41:18:     rv = self.invoke(ctx)
-2026-05-31 21:41:18:          ^^^^^^^^^^^^^^^^
-2026-05-31 21:41:18:   File "C:\seismocluster\.venv\Lib\site-packages\click\core.py", line 1298, in invoke
-2026-05-31 21:41:18:     return ctx.invoke(self.callback, **ctx.params)
-2026-05-31 21:41:18:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:18:   File "C:\seismocluster\.venv\Lib\site-packages\click\core.py", line 853, in invoke
-2026-05-31 21:41:18:     return callback(*args, **kwargs)
-2026-05-31 21:41:18:            ^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:18:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\main.py", line 441, in main
-2026-05-31 21:41:18:     run(
-2026-05-31 21:41:18:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\main.py", line 617, in run
-2026-05-31 21:41:18:     server.run()
-2026-05-31 21:41:18:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\server.py", line 75, in run
-2026-05-31 21:41:18:     return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
-2026-05-31 21:41:18:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:18:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\_compat.py", line 30, in asyncio_run
-2026-05-31 21:41:18:     return runner.run(main)
-2026-05-31 21:41:18:            ^^^^^^^^^^^^^^^^
-2026-05-31 21:41:18:   File "C:\Users\USER\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py", line 118, in run
-2026-05-31 21:41:18:     return self._loop.run_until_complete(task)
-2026-05-31 21:41:18:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:18:   File "C:\Users\USER\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 654, in run_until_complete
-2026-05-31 21:41:18:     return future.result()
-2026-05-31 21:41:18:            ^^^^^^^^^^^^^^^
-2026-05-31 21:41:18:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\server.py", line 79, in serve
-2026-05-31 21:41:18:     await self._serve(sockets)
-2026-05-31 21:41:18:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\server.py", line 86, in _serve
-2026-05-31 21:41:18:     config.load()
-2026-05-31 21:41:18:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\config.py", line 449, in load
-2026-05-31 21:41:18:     self.loaded_app = import_from_string(self.app)
-2026-05-31 21:41:18:                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:18:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\importer.py", line 19, in import_from_string
-2026-05-31 21:41:18:     module = importlib.import_module(module_str)
-2026-05-31 21:41:18:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:18:   File "C:\Users\USER\AppData\Local\Programs\Python\Python311\Lib\importlib\__init__.py", line 126, in import_module
-2026-05-31 21:41:18:     return _bootstrap._gcd_import(name[level:], package, level)
-2026-05-31 21:41:18:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:18:   File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
-2026-05-31 21:41:18:   File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
-2026-05-31 21:41:18:   File "<frozen importlib._bootstrap>", line 1147, in _find_and_load_unlocked
-2026-05-31 21:41:18:   File "<frozen importlib._bootstrap>", line 690, in _load_unlocked
-2026-05-31 21:41:18:   File "<frozen importlib._bootstrap_external>", line 940, in exec_module
-2026-05-31 21:41:18:   File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
-2026-05-31 21:41:18:   File "C:\seismocluster\backend\api\main.py", line 8, in <module>
-2026-05-31 21:41:18:     from api.routes import ml, earthquake, cluster, summary
-2026-05-31 21:41:18:   File "C:\seismocluster\backend\api\routes\ml.py", line 8, in <module>
-2026-05-31 21:41:18:     from app.config.database import get_db
-2026-05-31 21:41:18:   File "C:\seismocluster\backend\app\config\database.py", line 24, in <module>
-2026-05-31 21:41:18:     engine = create_engine(DATABASE_URL)
-2026-05-31 21:41:18:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:18:   File "<string>", line 2, in create_engine
-2026-05-31 21:41:18:   File "C:\seismocluster\.venv\Lib\site-packages\sqlalchemy\util\deprecations.py", line 281, in warned
-2026-05-31 21:41:18:     return fn(*args, **kwargs)  # type: ignore[no-any-return]
-2026-05-31 21:41:18:            ^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:18:   File "C:\seismocluster\.venv\Lib\site-packages\sqlalchemy\engine\create.py", line 564, in create_engine
-2026-05-31 21:41:18:     u = _url.make_url(url)
-2026-05-31 21:41:18:         ^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:18:   File "C:\seismocluster\.venv\Lib\site-packages\sqlalchemy\engine\url.py", line 856, in make_url
-2026-05-31 21:41:18:     return _parse_url(name_or_url)
-2026-05-31 21:41:18:            ^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:18:   File "C:\seismocluster\.venv\Lib\site-packages\sqlalchemy\engine\url.py", line 917, in _parse_url
-2026-05-31 21:41:18:     components["port"] = int(components["port"])
-2026-05-31 21:41:18:                          ^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:18: ValueError: invalid literal for int() with base 10: 'None'
-2026-05-31 21:41:27: Traceback (most recent call last):
-2026-05-31 21:41:27:   File "<frozen runpy>", line 198, in _run_module_as_main
-2026-05-31 21:41:27:   File "<frozen runpy>", line 88, in _run_code
-2026-05-31 21:41:27:   File "C:\seismocluster\.venv\Scripts\uvicorn.exe\__main__.py", line 7, in <module>
-2026-05-31 21:41:27:   File "C:\seismocluster\.venv\Lib\site-packages\click\core.py", line 1514, in __call__
-2026-05-31 21:41:27:     return self.main(*args, **kwargs)
-2026-05-31 21:41:27:            ^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:27:   File "C:\seismocluster\.venv\Lib\site-packages\click\core.py", line 1435, in main
-2026-05-31 21:41:27:     rv = self.invoke(ctx)
-2026-05-31 21:41:27:          ^^^^^^^^^^^^^^^^
-2026-05-31 21:41:27:   File "C:\seismocluster\.venv\Lib\site-packages\click\core.py", line 1298, in invoke
-2026-05-31 21:41:27:     return ctx.invoke(self.callback, **ctx.params)
-2026-05-31 21:41:27:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:27:   File "C:\seismocluster\.venv\Lib\site-packages\click\core.py", line 853, in invoke
-2026-05-31 21:41:27:     return callback(*args, **kwargs)
-2026-05-31 21:41:27:            ^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:27:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\main.py", line 441, in main
-2026-05-31 21:41:27:     run(
-2026-05-31 21:41:27:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\main.py", line 617, in run
-2026-05-31 21:41:27:     server.run()
-2026-05-31 21:41:27:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\server.py", line 75, in run
-2026-05-31 21:41:27:     return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
-2026-05-31 21:41:27:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:27:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\_compat.py", line 30, in asyncio_run
-2026-05-31 21:41:27:     return runner.run(main)
-2026-05-31 21:41:27:            ^^^^^^^^^^^^^^^^
-2026-05-31 21:41:27:   File "C:\Users\USER\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py", line 118, in run
-2026-05-31 21:41:27:     return self._loop.run_until_complete(task)
-2026-05-31 21:41:27:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:27:   File "C:\Users\USER\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 654, in run_until_complete
-2026-05-31 21:41:27:     return future.result()
-2026-05-31 21:41:27:            ^^^^^^^^^^^^^^^
-2026-05-31 21:41:27:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\server.py", line 79, in serve
-2026-05-31 21:41:27:     await self._serve(sockets)
-2026-05-31 21:41:27:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\server.py", line 86, in _serve
-2026-05-31 21:41:27:     config.load()
-2026-05-31 21:41:27:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\config.py", line 449, in load
-2026-05-31 21:41:27:     self.loaded_app = import_from_string(self.app)
-2026-05-31 21:41:27:                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:27:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\importer.py", line 19, in import_from_string
-2026-05-31 21:41:27:     module = importlib.import_module(module_str)
-2026-05-31 21:41:27:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:27:   File "C:\Users\USER\AppData\Local\Programs\Python\Python311\Lib\importlib\__init__.py", line 126, in import_module
-2026-05-31 21:41:27:     return _bootstrap._gcd_import(name[level:], package, level)
-2026-05-31 21:41:27:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:27:   File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
-2026-05-31 21:41:27:   File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
-2026-05-31 21:41:27:   File "<frozen importlib._bootstrap>", line 1147, in _find_and_load_unlocked
-2026-05-31 21:41:27:   File "<frozen importlib._bootstrap>", line 690, in _load_unlocked
-2026-05-31 21:41:27:   File "<frozen importlib._bootstrap_external>", line 940, in exec_module
-2026-05-31 21:41:27:   File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
-2026-05-31 21:41:27:   File "C:\seismocluster\backend\api\main.py", line 8, in <module>
-2026-05-31 21:41:27:     from api.routes import ml, earthquake, cluster, summary
-2026-05-31 21:41:27:   File "C:\seismocluster\backend\api\routes\ml.py", line 8, in <module>
-2026-05-31 21:41:27:     from app.config.database import get_db
-2026-05-31 21:41:27:   File "C:\seismocluster\backend\app\config\database.py", line 24, in <module>
-2026-05-31 21:41:27:     engine = create_engine(DATABASE_URL)
-2026-05-31 21:41:27:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:27:   File "<string>", line 2, in create_engine
-2026-05-31 21:41:27:   File "C:\seismocluster\.venv\Lib\site-packages\sqlalchemy\util\deprecations.py", line 281, in warned
-2026-05-31 21:41:27:     return fn(*args, **kwargs)  # type: ignore[no-any-return]
-2026-05-31 21:41:27:            ^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:27:   File "C:\seismocluster\.venv\Lib\site-packages\sqlalchemy\engine\create.py", line 564, in create_engine
-2026-05-31 21:41:27:     u = _url.make_url(url)
-2026-05-31 21:41:27:         ^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:27:   File "C:\seismocluster\.venv\Lib\site-packages\sqlalchemy\engine\url.py", line 856, in make_url
-2026-05-31 21:41:27:     return _parse_url(name_or_url)
-2026-05-31 21:41:27:            ^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:27:   File "C:\seismocluster\.venv\Lib\site-packages\sqlalchemy\engine\url.py", line 917, in _parse_url
-2026-05-31 21:41:27:     components["port"] = int(components["port"])
-2026-05-31 21:41:27:                          ^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:27: ValueError: invalid literal for int() with base 10: 'None'
-2026-05-31 21:41:37: Traceback (most recent call last):
-2026-05-31 21:41:37:   File "<frozen runpy>", line 198, in _run_module_as_main
-2026-05-31 21:41:37:   File "<frozen runpy>", line 88, in _run_code
-2026-05-31 21:41:37:   File "C:\seismocluster\.venv\Scripts\uvicorn.exe\__main__.py", line 7, in <module>
-2026-05-31 21:41:37:   File "C:\seismocluster\.venv\Lib\site-packages\click\core.py", line 1514, in __call__
-2026-05-31 21:41:37:     return self.main(*args, **kwargs)
-2026-05-31 21:41:37:            ^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:37:   File "C:\seismocluster\.venv\Lib\site-packages\click\core.py", line 1435, in main
-2026-05-31 21:41:37:     rv = self.invoke(ctx)
-2026-05-31 21:41:37:          ^^^^^^^^^^^^^^^^
-2026-05-31 21:41:37:   File "C:\seismocluster\.venv\Lib\site-packages\click\core.py", line 1298, in invoke
-2026-05-31 21:41:37:     return ctx.invoke(self.callback, **ctx.params)
-2026-05-31 21:41:37:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:37:   File "C:\seismocluster\.venv\Lib\site-packages\click\core.py", line 853, in invoke
-2026-05-31 21:41:37:     return callback(*args, **kwargs)
-2026-05-31 21:41:37:            ^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:37:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\main.py", line 441, in main
-2026-05-31 21:41:37:     run(
-2026-05-31 21:41:37:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\main.py", line 617, in run
-2026-05-31 21:41:37:     server.run()
-2026-05-31 21:41:37:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\server.py", line 75, in run
-2026-05-31 21:41:37:     return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
-2026-05-31 21:41:37:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:37:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\_compat.py", line 30, in asyncio_run
-2026-05-31 21:41:37:     return runner.run(main)
-2026-05-31 21:41:37:            ^^^^^^^^^^^^^^^^
-2026-05-31 21:41:37:   File "C:\Users\USER\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py", line 118, in run
-2026-05-31 21:41:37:     return self._loop.run_until_complete(task)
-2026-05-31 21:41:37:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:37:   File "C:\Users\USER\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 654, in run_until_complete
-2026-05-31 21:41:37:     return future.result()
-2026-05-31 21:41:37:            ^^^^^^^^^^^^^^^
-2026-05-31 21:41:37:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\server.py", line 79, in serve
-2026-05-31 21:41:37:     await self._serve(sockets)
-2026-05-31 21:41:37:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\server.py", line 86, in _serve
-2026-05-31 21:41:37:     config.load()
-2026-05-31 21:41:37:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\config.py", line 449, in load
-2026-05-31 21:41:37:     self.loaded_app = import_from_string(self.app)
-2026-05-31 21:41:37:                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:37:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\importer.py", line 19, in import_from_string
-2026-05-31 21:41:37:     module = importlib.import_module(module_str)
-2026-05-31 21:41:37:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:37:   File "C:\Users\USER\AppData\Local\Programs\Python\Python311\Lib\importlib\__init__.py", line 126, in import_module
-2026-05-31 21:41:37:     return _bootstrap._gcd_import(name[level:], package, level)
-2026-05-31 21:41:37:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:37:   File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
-2026-05-31 21:41:37:   File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
-2026-05-31 21:41:37:   File "<frozen importlib._bootstrap>", line 1147, in _find_and_load_unlocked
-2026-05-31 21:41:37:   File "<frozen importlib._bootstrap>", line 690, in _load_unlocked
-2026-05-31 21:41:37:   File "<frozen importlib._bootstrap_external>", line 940, in exec_module
-2026-05-31 21:41:37:   File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
-2026-05-31 21:41:37:   File "C:\seismocluster\backend\api\main.py", line 8, in <module>
-2026-05-31 21:41:37:     from api.routes import ml, earthquake, cluster, summary
-2026-05-31 21:41:37:   File "C:\seismocluster\backend\api\routes\ml.py", line 8, in <module>
-2026-05-31 21:41:37:     from app.config.database import get_db
-2026-05-31 21:41:37:   File "C:\seismocluster\backend\app\config\database.py", line 24, in <module>
-2026-05-31 21:41:37:     engine = create_engine(DATABASE_URL)
-2026-05-31 21:41:37:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:37:   File "<string>", line 2, in create_engine
-2026-05-31 21:41:37:   File "C:\seismocluster\.venv\Lib\site-packages\sqlalchemy\util\deprecations.py", line 281, in warned
-2026-05-31 21:41:37:     return fn(*args, **kwargs)  # type: ignore[no-any-return]
-2026-05-31 21:41:37:            ^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:37:   File "C:\seismocluster\.venv\Lib\site-packages\sqlalchemy\engine\create.py", line 564, in create_engine
-2026-05-31 21:41:37:     u = _url.make_url(url)
-2026-05-31 21:41:37:         ^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:37:   File "C:\seismocluster\.venv\Lib\site-packages\sqlalchemy\engine\url.py", line 856, in make_url
-2026-05-31 21:41:37:     return _parse_url(name_or_url)
-2026-05-31 21:41:37:            ^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:37:   File "C:\seismocluster\.venv\Lib\site-packages\sqlalchemy\engine\url.py", line 917, in _parse_url
-2026-05-31 21:41:37:     components["port"] = int(components["port"])
-2026-05-31 21:41:37:                          ^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:37: ValueError: invalid literal for int() with base 10: 'None'
-2026-05-31 21:41:49: Traceback (most recent call last):
-2026-05-31 21:41:49:   File "<frozen runpy>", line 198, in _run_module_as_main
-2026-05-31 21:41:49:   File "<frozen runpy>", line 88, in _run_code
-2026-05-31 21:41:49:   File "C:\seismocluster\.venv\Scripts\uvicorn.exe\__main__.py", line 7, in <module>
-2026-05-31 21:41:49:   File "C:\seismocluster\.venv\Lib\site-packages\click\core.py", line 1514, in __call__
-2026-05-31 21:41:49:     return self.main(*args, **kwargs)
-2026-05-31 21:41:49:            ^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:49:   File "C:\seismocluster\.venv\Lib\site-packages\click\core.py", line 1435, in main
-2026-05-31 21:41:49:     rv = self.invoke(ctx)
-2026-05-31 21:41:49:          ^^^^^^^^^^^^^^^^
-2026-05-31 21:41:49:   File "C:\seismocluster\.venv\Lib\site-packages\click\core.py", line 1298, in invoke
-2026-05-31 21:41:49:     return ctx.invoke(self.callback, **ctx.params)
-2026-05-31 21:41:49:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:49:   File "C:\seismocluster\.venv\Lib\site-packages\click\core.py", line 853, in invoke
-2026-05-31 21:41:49:     return callback(*args, **kwargs)
-2026-05-31 21:41:49:            ^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:49:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\main.py", line 441, in main
-2026-05-31 21:41:49:     run(
-2026-05-31 21:41:49:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\main.py", line 617, in run
-2026-05-31 21:41:49:     server.run()
-2026-05-31 21:41:49:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\server.py", line 75, in run
-2026-05-31 21:41:49:     return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
-2026-05-31 21:41:49:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:49:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\_compat.py", line 30, in asyncio_run
-2026-05-31 21:41:49:     return runner.run(main)
-2026-05-31 21:41:49:            ^^^^^^^^^^^^^^^^
-2026-05-31 21:41:49:   File "C:\Users\USER\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py", line 118, in run
-2026-05-31 21:41:49:     return self._loop.run_until_complete(task)
-2026-05-31 21:41:49:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:49:   File "C:\Users\USER\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 654, in run_until_complete
-2026-05-31 21:41:49:     return future.result()
-2026-05-31 21:41:49:            ^^^^^^^^^^^^^^^
-2026-05-31 21:41:49:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\server.py", line 79, in serve
-2026-05-31 21:41:49:     await self._serve(sockets)
-2026-05-31 21:41:49:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\server.py", line 86, in _serve
-2026-05-31 21:41:49:     config.load()
-2026-05-31 21:41:49:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\config.py", line 449, in load
-2026-05-31 21:41:49:     self.loaded_app = import_from_string(self.app)
-2026-05-31 21:41:49:                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:49:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\importer.py", line 19, in import_from_string
-2026-05-31 21:41:49:     module = importlib.import_module(module_str)
-2026-05-31 21:41:49:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:49:   File "C:\Users\USER\AppData\Local\Programs\Python\Python311\Lib\importlib\__init__.py", line 126, in import_module
-2026-05-31 21:41:49:     return _bootstrap._gcd_import(name[level:], package, level)
-2026-05-31 21:41:49:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:49:   File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
-2026-05-31 21:41:49:   File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
-2026-05-31 21:41:49:   File "<frozen importlib._bootstrap>", line 1147, in _find_and_load_unlocked
-2026-05-31 21:41:49:   File "<frozen importlib._bootstrap>", line 690, in _load_unlocked
-2026-05-31 21:41:49:   File "<frozen importlib._bootstrap_external>", line 940, in exec_module
-2026-05-31 21:41:49:   File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
-2026-05-31 21:41:49:   File "C:\seismocluster\backend\api\main.py", line 8, in <module>
-2026-05-31 21:41:49:     from api.routes import ml, earthquake, cluster, summary
-2026-05-31 21:41:49:   File "C:\seismocluster\backend\api\routes\ml.py", line 8, in <module>
-2026-05-31 21:41:49:     from app.config.database import get_db
-2026-05-31 21:41:49:   File "C:\seismocluster\backend\app\config\database.py", line 24, in <module>
-2026-05-31 21:41:49:     engine = create_engine(DATABASE_URL)
-2026-05-31 21:41:49:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:49:   File "<string>", line 2, in create_engine
-2026-05-31 21:41:49:   File "C:\seismocluster\.venv\Lib\site-packages\sqlalchemy\util\deprecations.py", line 281, in warned
-2026-05-31 21:41:49:     return fn(*args, **kwargs)  # type: ignore[no-any-return]
-2026-05-31 21:41:49:            ^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:49:   File "C:\seismocluster\.venv\Lib\site-packages\sqlalchemy\engine\create.py", line 564, in create_engine
-2026-05-31 21:41:49:     u = _url.make_url(url)
-2026-05-31 21:41:49:         ^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:49:   File "C:\seismocluster\.venv\Lib\site-packages\sqlalchemy\engine\url.py", line 856, in make_url
-2026-05-31 21:41:49:     return _parse_url(name_or_url)
-2026-05-31 21:41:49:            ^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:49:   File "C:\seismocluster\.venv\Lib\site-packages\sqlalchemy\engine\url.py", line 917, in _parse_url
-2026-05-31 21:41:49:     components["port"] = int(components["port"])
-2026-05-31 21:41:49:                          ^^^^^^^^^^^^^^^^^^^^^^^
-2026-05-31 21:41:49: ValueError: invalid literal for int() with base 10: 'None'
+2026-05-31 22:02:07: Traceback (most recent call last):
+2026-05-31 22:02:07:   File "<frozen runpy>", line 198, in _run_module_as_main
+2026-05-31 22:02:07:   File "<frozen runpy>", line 88, in _run_code
+2026-05-31 22:02:07:   File "C:\seismocluster\.venv\Scripts\uvicorn.exe\__main__.py", line 7, in <module>
+2026-05-31 22:02:07:   File "C:\seismocluster\.venv\Lib\site-packages\click\core.py", line 1514, in __call__
+2026-05-31 22:02:07:     return self.main(*args, **kwargs)
+2026-05-31 22:02:07:            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-05-31 22:02:07:   File "C:\seismocluster\.venv\Lib\site-packages\click\core.py", line 1435, in main
+2026-05-31 22:02:07:     rv = self.invoke(ctx)
+2026-05-31 22:02:07:          ^^^^^^^^^^^^^^^^
+2026-05-31 22:02:07:   File "C:\seismocluster\.venv\Lib\site-packages\click\core.py", line 1298, in invoke
+2026-05-31 22:02:07:     return ctx.invoke(self.callback, **ctx.params)
+2026-05-31 22:02:07:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-05-31 22:02:07:   File "C:\seismocluster\.venv\Lib\site-packages\click\core.py", line 853, in invoke
+2026-05-31 22:02:07:     return callback(*args, **kwargs)
+2026-05-31 22:02:07:            ^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-05-31 22:02:07:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\main.py", line 441, in main
+2026-05-31 22:02:07:     run(
+2026-05-31 22:02:07:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\main.py", line 617, in run
+2026-05-31 22:02:07:     server.run()
+2026-05-31 22:02:07:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\server.py", line 75, in run
+2026-05-31 22:02:07:     return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
+2026-05-31 22:02:07:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-05-31 22:02:07:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\_compat.py", line 30, in asyncio_run
+2026-05-31 22:02:07:     return runner.run(main)
+2026-05-31 22:02:07:            ^^^^^^^^^^^^^^^^
+2026-05-31 22:02:07:   File "C:\Users\USER\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py", line 118, in run
+2026-05-31 22:02:07:     return self._loop.run_until_complete(task)
+2026-05-31 22:02:07:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-05-31 22:02:07:   File "C:\Users\USER\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 654, in run_until_complete
+2026-05-31 22:02:07:     return future.result()
+2026-05-31 22:02:07:            ^^^^^^^^^^^^^^^
+2026-05-31 22:02:07:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\server.py", line 79, in serve
+2026-05-31 22:02:07:     await self._serve(sockets)
+2026-05-31 22:02:07:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\server.py", line 86, in _serve
+2026-05-31 22:02:07:     config.load()
+2026-05-31 22:02:07:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\config.py", line 449, in load
+2026-05-31 22:02:07:     self.loaded_app = import_from_string(self.app)
+2026-05-31 22:02:07:                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-05-31 22:02:07:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\importer.py", line 19, in import_from_string
+2026-05-31 22:02:07:     module = importlib.import_module(module_str)
+2026-05-31 22:02:07:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-05-31 22:02:07:   File "C:\Users\USER\AppData\Local\Programs\Python\Python311\Lib\importlib\__init__.py", line 126, in import_module
+2026-05-31 22:02:07:     return _bootstrap._gcd_import(name[level:], package, level)
+2026-05-31 22:02:07:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-05-31 22:02:07:   File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+2026-05-31 22:02:07:   File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+2026-05-31 22:02:07:   File "<frozen importlib._bootstrap>", line 1147, in _find_and_load_unlocked
+2026-05-31 22:02:07:   File "<frozen importlib._bootstrap>", line 690, in _load_unlocked
+2026-05-31 22:02:07:   File "<frozen importlib._bootstrap_external>", line 940, in exec_module
+2026-05-31 22:02:07:   File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+2026-05-31 22:02:07:   File "C:\seismocluster\backend\api\main.py", line 8, in <module>
+2026-05-31 22:02:07:     from api.routes import ml, earthquake, cluster, summary
+2026-05-31 22:02:07:   File "C:\seismocluster\backend\api\routes\ml.py", line 8, in <module>
+2026-05-31 22:02:07:     from app.config.database import get_db
+2026-05-31 22:02:07:   File "C:\seismocluster\backend\app\config\database.py", line 24, in <module>
+2026-05-31 22:02:07:     engine = create_engine(DATABASE_URL)
+2026-05-31 22:02:07:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-05-31 22:02:07:   File "<string>", line 2, in create_engine
+2026-05-31 22:02:07:   File "C:\seismocluster\.venv\Lib\site-packages\sqlalchemy\util\deprecations.py", line 281, in warned
+2026-05-31 22:02:07:     return fn(*args, **kwargs)  # type: ignore[no-any-return]
+2026-05-31 22:02:07:            ^^^^^^^^^^^^^^^^^^^
+2026-05-31 22:02:07:   File "C:\seismocluster\.venv\Lib\site-packages\sqlalchemy\engine\create.py", line 564, in create_engine
+2026-05-31 22:02:07:     u = _url.make_url(url)
+2026-05-31 22:02:07:         ^^^^^^^^^^^^^^^^^^
+2026-05-31 22:02:07:   File "C:\seismocluster\.venv\Lib\site-packages\sqlalchemy\engine\url.py", line 856, in make_url
+2026-05-31 22:02:07:     return _parse_url(name_or_url)
+2026-05-31 22:02:07:            ^^^^^^^^^^^^^^^^^^^^^^^
+2026-05-31 22:02:07:   File "C:\seismocluster\.venv\Lib\site-packages\sqlalchemy\engine\url.py", line 917, in _parse_url
+2026-05-31 22:02:07:     components["port"] = int(components["port"])
+2026-05-31 22:02:07:                          ^^^^^^^^^^^^^^^^^^^^^^^
+2026-05-31 22:02:07: ValueError: invalid literal for int() with base 10: 'None'
+2026-05-31 22:02:15: Traceback (most recent call last):
+2026-05-31 22:02:15:   File "<frozen runpy>", line 198, in _run_module_as_main
+2026-05-31 22:02:15:   File "<frozen runpy>", line 88, in _run_code
+2026-05-31 22:02:15:   File "C:\seismocluster\.venv\Scripts\uvicorn.exe\__main__.py", line 7, in <module>
+2026-05-31 22:02:15:   File "C:\seismocluster\.venv\Lib\site-packages\click\core.py", line 1514, in __call__
+2026-05-31 22:02:15:     return self.main(*args, **kwargs)
+2026-05-31 22:02:15:            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-05-31 22:02:15:   File "C:\seismocluster\.venv\Lib\site-packages\click\core.py", line 1435, in main
+2026-05-31 22:02:15:     rv = self.invoke(ctx)
+2026-05-31 22:02:15:          ^^^^^^^^^^^^^^^^
+2026-05-31 22:02:15:   File "C:\seismocluster\.venv\Lib\site-packages\click\core.py", line 1298, in invoke
+2026-05-31 22:02:15:     return ctx.invoke(self.callback, **ctx.params)
+2026-05-31 22:02:15:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-05-31 22:02:15:   File "C:\seismocluster\.venv\Lib\site-packages\click\core.py", line 853, in invoke
+2026-05-31 22:02:15:     return callback(*args, **kwargs)
+2026-05-31 22:02:15:            ^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-05-31 22:02:15:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\main.py", line 441, in main
+2026-05-31 22:02:15:     run(
+2026-05-31 22:02:15:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\main.py", line 617, in run
+2026-05-31 22:02:15:     server.run()
+2026-05-31 22:02:15:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\server.py", line 75, in run
+2026-05-31 22:02:15:     return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
+2026-05-31 22:02:15:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-05-31 22:02:15:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\_compat.py", line 30, in asyncio_run
+2026-05-31 22:02:15:     return runner.run(main)
+2026-05-31 22:02:15:            ^^^^^^^^^^^^^^^^
+2026-05-31 22:02:15:   File "C:\Users\USER\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py", line 118, in run
+2026-05-31 22:02:15:     return self._loop.run_until_complete(task)
+2026-05-31 22:02:15:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-05-31 22:02:15:   File "C:\Users\USER\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 654, in run_until_complete
+2026-05-31 22:02:15:     return future.result()
+2026-05-31 22:02:15:            ^^^^^^^^^^^^^^^
+2026-05-31 22:02:15:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\server.py", line 79, in serve
+2026-05-31 22:02:15:     await self._serve(sockets)
+2026-05-31 22:02:15:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\server.py", line 86, in _serve
+2026-05-31 22:02:15:     config.load()
+2026-05-31 22:02:15:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\config.py", line 449, in load
+2026-05-31 22:02:15:     self.loaded_app = import_from_string(self.app)
+2026-05-31 22:02:15:                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-05-31 22:02:15:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\importer.py", line 19, in import_from_string
+2026-05-31 22:02:15:     module = importlib.import_module(module_str)
+2026-05-31 22:02:15:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-05-31 22:02:15:   File "C:\Users\USER\AppData\Local\Programs\Python\Python311\Lib\importlib\__init__.py", line 126, in import_module
+2026-05-31 22:02:15:     return _bootstrap._gcd_import(name[level:], package, level)
+2026-05-31 22:02:15:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-05-31 22:02:15:   File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+2026-05-31 22:02:15:   File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+2026-05-31 22:02:15:   File "<frozen importlib._bootstrap>", line 1147, in _find_and_load_unlocked
+2026-05-31 22:02:15:   File "<frozen importlib._bootstrap>", line 690, in _load_unlocked
+2026-05-31 22:02:15:   File "<frozen importlib._bootstrap_external>", line 940, in exec_module
+2026-05-31 22:02:15:   File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+2026-05-31 22:02:15:   File "C:\seismocluster\backend\api\main.py", line 8, in <module>
+2026-05-31 22:02:15:     from api.routes import ml, earthquake, cluster, summary
+2026-05-31 22:02:15:   File "C:\seismocluster\backend\api\routes\ml.py", line 8, in <module>
+2026-05-31 22:02:15:     from app.config.database import get_db
+2026-05-31 22:02:15:   File "C:\seismocluster\backend\app\config\database.py", line 24, in <module>
+2026-05-31 22:02:15:     engine = create_engine(DATABASE_URL)
+2026-05-31 22:02:15:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-05-31 22:02:15:   File "<string>", line 2, in create_engine
+2026-05-31 22:02:15:   File "C:\seismocluster\.venv\Lib\site-packages\sqlalchemy\util\deprecations.py", line 281, in warned
+2026-05-31 22:02:15:     return fn(*args, **kwargs)  # type: ignore[no-any-return]
+2026-05-31 22:02:15:            ^^^^^^^^^^^^^^^^^^^
+2026-05-31 22:02:15:   File "C:\seismocluster\.venv\Lib\site-packages\sqlalchemy\engine\create.py", line 564, in create_engine
+2026-05-31 22:02:15:     u = _url.make_url(url)
+2026-05-31 22:02:15:         ^^^^^^^^^^^^^^^^^^
+2026-05-31 22:02:15:   File "C:\seismocluster\.venv\Lib\site-packages\sqlalchemy\engine\url.py", line 856, in make_url
+2026-05-31 22:02:15:     return _parse_url(name_or_url)
+2026-05-31 22:02:15:            ^^^^^^^^^^^^^^^^^^^^^^^
+2026-05-31 22:02:15:   File "C:\seismocluster\.venv\Lib\site-packages\sqlalchemy\engine\url.py", line 917, in _parse_url
+2026-05-31 22:02:15:     components["port"] = int(components["port"])
+2026-05-31 22:02:15:                          ^^^^^^^^^^^^^^^^^^^^^^^
+2026-05-31 22:02:15: ValueError: invalid literal for int() with base 10: 'None'
+2026-05-31 22:02:24: Traceback (most recent call last):
+2026-05-31 22:02:24:   File "<frozen runpy>", line 198, in _run_module_as_main
+2026-05-31 22:02:24:   File "<frozen runpy>", line 88, in _run_code
+2026-05-31 22:02:24:   File "C:\seismocluster\.venv\Scripts\uvicorn.exe\__main__.py", line 7, in <module>
+2026-05-31 22:02:24:   File "C:\seismocluster\.venv\Lib\site-packages\click\core.py", line 1514, in __call__
+2026-05-31 22:02:24:     return self.main(*args, **kwargs)
+2026-05-31 22:02:24:            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-05-31 22:02:24:   File "C:\seismocluster\.venv\Lib\site-packages\click\core.py", line 1435, in main
+2026-05-31 22:02:24:     rv = self.invoke(ctx)
+2026-05-31 22:02:24:          ^^^^^^^^^^^^^^^^
+2026-05-31 22:02:24:   File "C:\seismocluster\.venv\Lib\site-packages\click\core.py", line 1298, in invoke
+2026-05-31 22:02:24:     return ctx.invoke(self.callback, **ctx.params)
+2026-05-31 22:02:24:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-05-31 22:02:24:   File "C:\seismocluster\.venv\Lib\site-packages\click\core.py", line 853, in invoke
+2026-05-31 22:02:24:     return callback(*args, **kwargs)
+2026-05-31 22:02:24:            ^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-05-31 22:02:24:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\main.py", line 441, in main
+2026-05-31 22:02:24:     run(
+2026-05-31 22:02:24:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\main.py", line 617, in run
+2026-05-31 22:02:24:     server.run()
+2026-05-31 22:02:24:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\server.py", line 75, in run
+2026-05-31 22:02:24:     return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
+2026-05-31 22:02:24:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-05-31 22:02:24:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\_compat.py", line 30, in asyncio_run
+2026-05-31 22:02:24:     return runner.run(main)
+2026-05-31 22:02:24:            ^^^^^^^^^^^^^^^^
+2026-05-31 22:02:24:   File "C:\Users\USER\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py", line 118, in run
+2026-05-31 22:02:24:     return self._loop.run_until_complete(task)
+2026-05-31 22:02:24:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-05-31 22:02:24:   File "C:\Users\USER\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py", line 654, in run_until_complete
+2026-05-31 22:02:24:     return future.result()
+2026-05-31 22:02:24:            ^^^^^^^^^^^^^^^
+2026-05-31 22:02:24:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\server.py", line 79, in serve
+2026-05-31 22:02:24:     await self._serve(sockets)
+2026-05-31 22:02:24:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\server.py", line 86, in _serve
+2026-05-31 22:02:24:     config.load()
+2026-05-31 22:02:24:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\config.py", line 449, in load
+2026-05-31 22:02:24:     self.loaded_app = import_from_string(self.app)
+2026-05-31 22:02:24:                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-05-31 22:02:24:   File "C:\seismocluster\.venv\Lib\site-packages\uvicorn\importer.py", line 19, in import_from_string
+2026-05-31 22:02:24:     module = importlib.import_module(module_str)
+2026-05-31 22:02:24:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-05-31 22:02:24:   File "C:\Users\USER\AppData\Local\Programs\Python\Python311\Lib\importlib\__init__.py", line 126, in import_module
+2026-05-31 22:02:24:     return _bootstrap._gcd_import(name[level:], package, level)
+2026-05-31 22:02:24:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-05-31 22:02:24:   File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+2026-05-31 22:02:24:   File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+2026-05-31 22:02:24:   File "<frozen importlib._bootstrap>", line 1147, in _find_and_load_unlocked
+2026-05-31 22:02:24:   File "<frozen importlib._bootstrap>", line 690, in _load_unlocked
+2026-05-31 22:02:24:   File "<frozen importlib._bootstrap_external>", line 940, in exec_module
+2026-05-31 22:02:24:   File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+2026-05-31 22:02:24:   File "C:\seismocluster\backend\api\main.py", line 8, in <module>
+2026-05-31 22:02:24:     from api.routes import ml, earthquake, cluster, summary
+2026-05-31 22:02:24:   File "C:\seismocluster\backend\api\routes\ml.py", line 8, in <module>
+2026-05-31 22:02:24:     from app.config.database import get_db
+2026-05-31 22:02:24:   File "C:\seismocluster\backend\app\config\database.py", line 24, in <module>
+2026-05-31 22:02:24:     engine = create_engine(DATABASE_URL)
+2026-05-31 22:02:24:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-05-31 22:02:24:   File "<string>", line 2, in create_engine
+2026-05-31 22:02:24:   File "C:\seismocluster\.venv\Lib\site-packages\sqlalchemy\util\deprecations.py", line 281, in warned
+2026-05-31 22:02:24:     return fn(*args, **kwargs)  # type: ignore[no-any-return]
+2026-05-31 22:02:24:            ^^^^^^^^^^^^^^^^^^^
+2026-05-31 22:02:24:   File "C:\seismocluster\.venv\Lib\site-packages\sqlalchemy\engine\create.py", line 564, in create_engine
+2026-05-31 22:02:24:     u = _url.make_url(url)
+2026-05-31 22:02:24:         ^^^^^^^^^^^^^^^^^^
+2026-05-31 22:02:24:   File "C:\seismocluster\.venv\Lib\site-packages\sqlalchemy\engine\url.py", line 856, in make_url
+2026-05-31 22:02:24:     return _parse_url(name_or_url)
+2026-05-31 22:02:24:            ^^^^^^^^^^^^^^^^^^^^^^^
+2026-05-31 22:02:24:   File "C:\seismocluster\.venv\Lib\site-packages\sqlalchemy\engine\url.py", line 917, in _parse_url
+2026-05-31 22:02:24:     components["port"] = int(components["port"])
+2026-05-31 22:02:24:                          ^^^^^^^^^^^^^^^^^^^^^^^
+2026-05-31 22:02:24: ValueError: invalid literal for int() with base 10: 'None'
