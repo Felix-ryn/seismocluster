@@ -53,3 +53,45 @@
 2026-05-25 13:04:43: INFO:     127.0.0.1:62977 - "GET /api/v1/clusters/anomalies?limit=500 HTTP/1.1" 200 OK
 2026-05-25 13:04:43: INFO:     127.0.0.1:65502 - "GET /api/v1/summary/stats HTTP/1.1" 200 OK
 2026-05-25 13:04:43: INFO:     127.0.0.1:62255 - "GET /api/v1/clusters/results?limit=500&offset=0 HTTP/1.1" 200 OK
+2026-05-28 12:06:54: Migration OK: hierarchy_label column ensured.
+2026-05-28 12:06:54: [Scheduler] ETL otomatis aktif � interval 6 jam.
+2026-05-28 12:06:54: ==================================================
+2026-05-28 12:06:54: START TRAINING PIPELINE
+2026-05-28 12:06:54: Scaler berhasil dimuat
+2026-05-28 12:06:54: Scaler berhasil disimpan: C:\seismocluster\backend\app\saved_models\scaler.joblib
+2026-05-28 12:06:54: Scaler berhasil dimuat
+2026-05-28 12:06:54: ==================================================
+2026-05-28 12:06:54: Menghubungkan ke MLflow
+2026-05-28 12:06:54: Load Clustering Model: SeismoCluster_Clustering_Model_KMeans
+2026-05-28 12:06:54: Load Hotspot Model: SeismoCluster_Hotspot_Model
+2026-05-28 12:06:54: Load Anomaly Model: SeismoCluster_Anomaly_Model_ISF
+2026-05-28 12:06:54: Load Hierarchy Model: SeismoCluster_Hierarchy_Model
+2026-05-28 12:06:54: Semua model berhasil dimuat
+2026-05-28 12:06:54: ==================================================
+2026-05-28 12:06:54: Menjalankan KMeans clustering...
+2026-05-28 12:06:54: ==================================================
+2026-05-28 12:06:54: ERROR TRAINING
+2026-05-28 12:06:54: 'charmap' codec can't encode character '\u2192' in position 29: character maps to <undefined>
+2026-05-28 12:06:54: ==================================================
+2026-05-28 12:06:54: INFO:     127.0.0.1:49601 - "POST /api/v1/clusters/train HTTP/1.1" 500 Internal Server Error
+2026-05-28 12:07:04: INFO:     127.0.0.1:52057 - "GET /docs HTTP/1.1" 200 OK
+2026-05-28 12:07:04: INFO:     127.0.0.1:52057 - "GET /openapi.json HTTP/1.1" 200 OK
+2026-05-28 12:07:14: ==================================================
+2026-05-28 12:07:14: START TRAINING PIPELINE
+2026-05-28 12:07:14: Scaler berhasil dimuat
+2026-05-28 12:07:14: Scaler berhasil disimpan: C:\seismocluster\backend\app\saved_models\scaler.joblib
+2026-05-28 12:07:14: Scaler berhasil dimuat
+2026-05-28 12:07:14: ==================================================
+2026-05-28 12:07:14: Menghubungkan ke MLflow
+2026-05-28 12:07:14: Load Clustering Model: SeismoCluster_Clustering_Model_KMeans
+2026-05-28 12:07:14: Load Hotspot Model: SeismoCluster_Hotspot_Model
+2026-05-28 12:07:14: Load Anomaly Model: SeismoCluster_Anomaly_Model_ISF
+2026-05-28 12:07:14: Load Hierarchy Model: SeismoCluster_Hierarchy_Model
+2026-05-28 12:07:14: Semua model berhasil dimuat
+2026-05-28 12:07:14: ==================================================
+2026-05-28 12:07:14: Menjalankan KMeans clustering...
+2026-05-28 12:07:14: ==================================================
+2026-05-28 12:07:14: ERROR TRAINING
+2026-05-28 12:07:14: 'charmap' codec can't encode character '\u2192' in position 29: character maps to <undefined>
+2026-05-28 12:07:14: ==================================================
+2026-05-28 12:07:14: INFO:     127.0.0.1:52057 - "POST /api/v1/clusters/train HTTP/1.1" 500 Internal Server Error
