@@ -21,21 +21,6 @@ services:
       timeout: 5s
       retries: 5
 
-  mlflow:
-    build:
-      context: .
-      dockerfile: Dockerfile.mlflow
-    container_name: seismocluster_mlflow
-    ports:
-      - "5000:5000"
-    environment:
-      MLFLOW_ALLOW_HOSTS: "*"
-    volumes:
-      - ./backend/mlflow.db:/mlflow/mlflow.db
-      - ./backend/mlartifacts:/mlflow/artifacts
-    networks:
-      - seismocluster_net
-
   backend:
     build:
       context: ./backend
@@ -49,18 +34,13 @@ services:
       DB_PASS: 123456
       DB_HOST: db
       DB_PORT: 5432
-      MLFLOW_TRACKING_URI: http://mlflow:5000
-      MLFLOW_CLUSTERING_MODEL_NAME: SeismoCluster_Clustering_Model_KMeans
-      MLFLOW_HOTSPOT_MODEL_NAME: SeismoCluster_Hotspot_Model
-      MLFLOW_ANOMALY_MODEL_NAME: SeismoCluster_Anomaly_Model_ISF
-      MLFLOW_HIERARCHY_MODEL_NAME: SeismoCluster_Hierarchy_Model
       PYTHONIOENCODING: utf-8
       LANG: C.UTF-8
+    volumes:
+      - ./backend/app/saved_models:/app/app/saved_models
     depends_on:
       db:
         condition: service_healthy
-      mlflow:
-        condition: service_started
     networks:
       - seismocluster_net
 
