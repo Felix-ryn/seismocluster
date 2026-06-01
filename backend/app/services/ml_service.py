@@ -2,14 +2,12 @@ import pandas as pd
 import numpy as np
 from datetime import datetime
 from sqlalchemy.orm import Session
-
 from app.models.pipeline import SeismoPipeline
 from app.models.clustering.evaluation import ClusterEvaluator
 
-
 def run_clustering(db: Session) -> dict:
     """
-    Baca dari processed_earthquakes, jalankan MLflow @champion,
+    Baca dari processed_earthquakes, jalankan model dari local joblib,
     simpan hasil ke earthquake_clusters dan cluster_summary.
     """
     pipeline = SeismoPipeline()
@@ -27,19 +25,22 @@ def run_clustering(db: Session) -> dict:
             "message": "Tidak ada data di processed_earthquakes. Jalankan ETL dan training terlebih dahulu."
         }
 
-    # 2. PREDICT menggunakan MLflow @champion
+    # 2. PREDICT menggunakan Local Joblib
     df = pipeline.predict_all(df)
+
     total_anomali = int(df['is_anomaly'].sum())
 
     # 3. EVALUASI
     coords_radians = df[['lat_radian', 'lon_radian']].values
+
     eval_kmeans = ClusterEvaluator.evaluate_model(
-        "KMeans (MLflow Champion)",
+        "KMeans (Local Joblib)",
         coords_radians,
         df['zona_klaster'].values
     )
+
     eval_hierarchy = ClusterEvaluator.evaluate_model(
-        "Hierarchical (MLflow Champion)",
+        "Hierarchical (Local Joblib)",
         coords_radians,
         df['hierarchy_label'].values
     )
@@ -51,6 +52,7 @@ def run_clustering(db: Session) -> dict:
             avg_magnitude=('magnitude', 'mean'),
             avg_depth=('depth', 'mean')
         ).reset_index()
+
         df_summary.rename(columns={'zona_klaster': 'cluster_label'}, inplace=True)
         df_summary.to_sql(
             'cluster_summary', con=connection, if_exists='append', index=False
@@ -68,7 +70,7 @@ def run_clustering(db: Session) -> dict:
 
         return {
             "status": "success",
-            "model_source": "MLflow @champion (KMeans + Hotspot + Isolation Forest + Hierarchical)",
+            "model_source": "Local Joblib (KMeans + Hotspot + Isolation Forest + Hierarchical)",
             "summary": {
                 "total_data_processed": len(df),
                 "kmeans_zones_found": int(df['zona_klaster'].nunique()),

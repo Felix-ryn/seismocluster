@@ -10,4 +10,4 @@ CMD ["mlflow", "server", \
      "--serve-artifacts", \
      "--host", "0.0.0.0", \
      "--port", "5000", \
-     "--allowed-hosts", "*"]
+     "--allowed-hosts", "mlflow,mlflow:5000,localhost,lpython -m mlflow server --backend-store-uri sqlite:///mlflow.db --host 0.0.0.0 --port 5000

@@ -23,9 +23,9 @@ class ClusterService:
     def execute_ml_pipeline(self):
         """
         Orkestrasi penuh:
-          1. Load raw_earthquakes → preprocessing → simpan ke processed_earthquakes
-          2. ml_service.run_clustering() → baca processed_earthquakes
-             → predict MLflow @champion → simpan ke earthquake_clusters + cluster_summary
+        1. Load raw_earthquakes → preprocessing → simpan ke processed_earthquakes
+        2. ml_service.run_clustering() → baca processed_earthquakes
+            → predict Local Joblib → simpan ke earthquake_clusters + cluster_summary
         """
 
         # 1. LOAD dari raw_earthquakes (Indonesia only)
