@@ -1,7 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 import traceback
-import mlflow
 import os
 from dotenv import load_dotenv
 
@@ -31,7 +30,7 @@ def predict_earthquakes_endpoint(
     limit: int = Query(default=100, ge=1, le=1000, description="Jumlah prediksi yang dikembalikan"),
     db: Session = Depends(get_db)
 ):
-    """Prediksi real-time menggunakan model MLflow (Hierarchical + Isolation Forest)."""
+    """Prediksi real-time menggunakan model lokal joblib."""
     try:
         print("=" * 50)
         print("Menerima request prediksi gempa")
@@ -91,50 +90,46 @@ def predict_earthquakes_endpoint(
 
 @router.get("/models")
 def get_model_status():
-    """Cek status model-model yang terdaftar di MLflow Model Registry."""
+    """Cek status model-model yang tersimpan di local joblib."""
     try:
-        mlflow_uri = os.getenv("MLFLOW_TRACKING_URI", "http://localhost:5000")
-        mlflow.set_tracking_uri(mlflow_uri)
+        models_dir = os.path.abspath(
+            os.path.join(os.path.dirname(__file__), "../../app/saved_models")
+        )
 
-        client = mlflow.tracking.MlflowClient()
-
-        cluster_model_name   = os.getenv("MLFLOW_CLUSTERING_MODEL_NAME", "SeismoCluster_Clustering_Model_KMeans")
-        hotspot_model_name   = os.getenv("MLFLOW_HOTSPOT_MODEL_NAME",   "SeismoCluster_Hotspot_Model")
-        anomaly_model_name   = os.getenv("MLFLOW_ANOMALY_MODEL_NAME",   "SeismoCluster_Anomaly_Model_ISF")
-        hierarchy_model_name = os.getenv("MLFLOW_HIERARCHY_MODEL_NAME", "SeismoCluster_Hierarchy_Model")
+        model_files = {
+            "SeismoCluster_Clustering_Model_KMeans": "clustering_model.joblib",
+            "SeismoCluster_Hotspot_Model": "hotspot_model.joblib",
+            "SeismoCluster_Anomaly_Model_ISF": "anomaly_model.joblib",
+            "SeismoCluster_Hierarchy_Model": "hierarchy_model.joblib",
+        }
 
         models_info = []
 
-        for model_name in [cluster_model_name, hotspot_model_name, anomaly_model_name, hierarchy_model_name]:
-            try:
-                champion = client.get_model_version_by_alias(model_name, "champion")
+        for model_name, filename in model_files.items():
+            filepath = os.path.join(models_dir, filename)
+            if os.path.exists(filepath):
+                size_mb = round(os.path.getsize(filepath) / (1024 * 1024), 2)
                 models_info.append({
                     "name": model_name,
                     "status": "available",
-                    "champion_version": champion.version,
-                    "champion_run_id": champion.run_id,
-                    "champion_status": champion.status,
+                    "source": "local_joblib",
+                    "file": filename,
+                    "size_mb": size_mb,
                 })
-            except mlflow.exceptions.MlflowException as model_err:
-                if "RESOURCE_DOES_NOT_EXIST" in str(model_err) or "not found" in str(model_err).lower():
-                    models_info.append({
-                        "name": model_name,
-                        "status": "no_champion",
-                        "error": "Alias 'champion' belum di-set di MLflow Registry"
-                    })
-                else:
-                    models_info.append({
-                        "name": model_name,
-                        "status": "not_found",
-                        "error": str(model_err)
-                    })
+            else:
+                models_info.append({
+                    "name": model_name,
+                    "status": "not_found",
+                    "error": f"File {filename} tidak ditemukan di saved_models"
+                })
 
         return {
             "status": "success",
-            "mlflow_uri": mlflow_uri,
+            "source": "local_joblib",
+            "models_dir": models_dir,
             "models": models_info
         }
 
     except Exception as e:
         traceback.print_exc()
-        raise HTTPException(status_code=500, detail=f"Gagal menghubungi MLflow: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))

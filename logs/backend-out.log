@@ -95,3 +95,21 @@
 2026-05-28 12:07:14: 'charmap' codec can't encode character '\u2192' in position 29: character maps to <undefined>
 2026-05-28 12:07:14: ==================================================
 2026-05-28 12:07:14: INFO:     127.0.0.1:52057 - "POST /api/v1/clusters/train HTTP/1.1" 500 Internal Server Error
+2026-06-01 16:25:42: Migration warning: could not translate host name "db" to address: Name or service not known
+2026-06-01 16:25:42: 
+2026-06-01 16:25:42: [Scheduler] ETL otomatis aktif � interval 6 jam.
+2026-06-01 16:25:42: INFO:     127.0.0.1:60315 - "GET / HTTP/1.1" 200 OK
+2026-06-01 16:25:43: INFO:     127.0.0.1:60315 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+2026-06-01 16:25:47: INFO:     127.0.0.1:60315 - "GET /docs HTTP/1.1" 200 OK
+2026-06-01 16:25:48: INFO:     127.0.0.1:60315 - "GET /openapi.json HTTP/1.1" 200 OK
+2026-06-01 16:26:04: ==================================================
+2026-06-01 16:26:04: Menerima request prediksi gempa
+2026-06-01 16:26:04: Scaler berhasil dimuat
+2026-06-01 16:26:04: STEP 1 - Load data
+2026-06-01 16:26:04: ==================================================
+2026-06-01 16:26:04: ERROR ML PIPELINE
+2026-06-01 16:26:04: (psycopg2.OperationalError) could not translate host name "db" to address: Name or service not known
+2026-06-01 16:26:04: 
+2026-06-01 16:26:04: (Background on this error at: https://sqlalche.me/e/20/e3q8)
+2026-06-01 16:26:04: ==================================================
+2026-06-01 16:26:04: INFO:     127.0.0.1:58607 - "GET /api/v1/ml/predict-earthquakes?limit=10 HTTP/1.1" 500 Internal Server Error
