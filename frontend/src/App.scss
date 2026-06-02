@@ -12,7 +12,8 @@
   transition: margin-left 0.25s ease;
   display: flex;
   flex-direction: column;
-  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .app-shell.sb-collapsed .main-area {
@@ -23,6 +24,8 @@
   flex: 1;
   padding: 18px 22px;
   background: var(--bg-page);
+  overflow-y: auto;
+  min-height: 0;
 }
 
 // ── Sidebar ───────────────────────────────────────────────────
