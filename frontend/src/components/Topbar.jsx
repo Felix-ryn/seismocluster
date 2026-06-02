@@ -1,6 +1,9 @@
 import { Bell, Search } from "lucide-react";
+import { useSearch } from "../App";
 
 export default function Topbar() {
+  const { query, setQuery } = useSearch();
+
   const dateStr = new Date().toLocaleDateString("id-ID", {
     weekday: "long",
     day: "numeric",
@@ -14,16 +17,24 @@ export default function Topbar() {
         <span className="topbar-greeting-name">Selamat Datang, Admin BMKG</span>
         <span className="topbar-greeting-date">{dateStr}</span>
       </div>
-
       <div className="topbar-search">
         <Search size={14} className="topbar-search-icon" />
         <input
           type="text"
           className="topbar-search-input"
           placeholder="Cari lokasi gempa..."
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
         />
+        {query && (
+          <button
+            onClick={() => setQuery("")}
+            style={{ background: "none", border: "none", cursor: "pointer", padding: "0 4px", color: "#888" }}
+          >
+            ×
+          </button>
+        )}
       </div>
-
       <div className="topbar-actions">
         <div className="topbar-live-badge">
           <span className="topbar-live-dot" />
