@@ -6,6 +6,7 @@ import {
 import Map from "../components/Map";
 import StatCard from "../components/StatCard";
 import DonutChart from "../components/DonutChart";
+import { useSearch } from "../App";
 import MagBadge from "../components/MagBadge";
 import ClusterBadge from "../components/ClusterBadge";
 import {
@@ -15,23 +16,23 @@ import {
 
 const MAG_FILTERS = [
   { label: "Semua", value: 0 },
-  { label: "M3+",   value: 3 },
-  { label: "M4+",   value: 4 },
-  { label: "M5+",   value: 5 },
+  { label: "M3+", value: 3 },
+  { label: "M4+", value: 4 },
+  { label: "M5+", value: 5 },
 ];
 
 export default function ClusterMap() {
-  const [points, setPoints]         = useState([]);
-  const [stats, setStats]           = useState({});
-  const [summary, setSummary]       = useState([]);
-  const [anomalies, setAnomalies]   = useState([]);
-  const [loading, setLoading]       = useState(true);
-  const [error, setError]           = useState(null);
-  const [etlLoading, setEtlLoading]     = useState(false);
+  const [points, setPoints] = useState([]);
+  const [stats, setStats] = useState({});
+  const [summary, setSummary] = useState([]);
+  const [anomalies, setAnomalies] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [etlLoading, setEtlLoading] = useState(false);
   const [trainLoading, setTrainLoading] = useState(false);
-  const [msg, setMsg]               = useState(null);
-  const [magFilter, setMagFilter]   = useState(0);
-  const [nextEtl, setNextEtl]       = useState(null);
+  const [msg, setMsg] = useState(null);
+  const [magFilter, setMagFilter] = useState(0);
+  const [nextEtl, setNextEtl] = useState(null);
 
   const refreshData = useCallback(async () => {
     setLoading(true);
@@ -61,7 +62,7 @@ export default function ClusterMap() {
         const job = res.data.jobs?.find((j) => j.id === "auto_etl");
         if (job?.next_run) setNextEtl(new Date(job.next_run));
       })
-      .catch(() => {});
+      .catch(() => { });
   }, [refreshData]);
 
   const handleETL = async () => {
@@ -94,14 +95,20 @@ export default function ClusterMap() {
     }
   };
 
+  const { query } = useSearch();
+
   const mapPoints = useMemo(() => {
     const ids = new Set(points.map(p => p.id));
     const extra = anomalies
       .filter(a => !ids.has(a.id))
       .map(a => ({ ...a, is_anomaly: true }));
-    const all = [...points, ...extra];
-    return magFilter > 0 ? all.filter(p => (p.magnitude ?? 0) >= magFilter) : all;
-  }, [points, anomalies, magFilter]);
+    let all = [...points, ...extra];
+    if (magFilter > 0) all = all.filter(p => (p.magnitude ?? 0) >= magFilter);
+    if (query.trim()) all = all.filter(p =>
+      (p.place ?? "").toLowerCase().includes(query.toLowerCase())
+    );
+    return all;
+  }, [points, anomalies, magFilter, query]);
 
   const top5 = useMemo(() =>
     [...points]
@@ -158,14 +165,14 @@ export default function ClusterMap() {
 
       {/* KPI Cards */}
       <div className="stat-cards-grid">
-        <StatCard icon={Activity}     label="Total Gempa"        value={stats.total_earthquakes_processed ?? 0} gradient="purple" />
-        <StatCard icon={Layers}       label="Total Cluster"      value={stats.total_clusters ?? 0}              gradient="cyan"   />
-        <StatCard icon={AlertOctagon} label="Anomali"            value={stats.total_anomalies ?? 0}             gradient="red"    />
-        <StatCard icon={MapPin}       label="Data Raw Indonesia" value={stats.total_raw_indonesia ?? 0}         gradient="green"  />
+        <StatCard icon={Activity} label="Total Gempa" value={stats.total_earthquakes_processed ?? 0} gradient="purple" />
+        <StatCard icon={Layers} label="Total Cluster" value={stats.total_clusters ?? 0} gradient="cyan" />
+        <StatCard icon={AlertOctagon} label="Anomali" value={stats.total_anomalies ?? 0} gradient="red" />
+        <StatCard icon={MapPin} label="Data Raw Indonesia" value={stats.total_raw_indonesia ?? 0} gradient="green" />
       </div>
 
       {loading && <p className="loading-text">Memuat data cluster…</p>}
-      {error   && <p className="error-text">{error}</p>}
+      {error && <p className="error-text">{error}</p>}
 
       {/* Main Grid */}
       <div className="cluster-main-grid">

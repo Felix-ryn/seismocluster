@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, createContext, useContext } from "react";
 import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Topbar from "./components/Topbar";
@@ -13,8 +13,15 @@ import Hierarchy from "./pages/Hierarchy";
 import Landing from "./pages/Landing";
 import "./App.scss";
 
+export const SearchContext = createContext({ query: "", setQuery: () => {} });
+
+export function useSearch() {
+  return useContext(SearchContext);
+}
+
 function AppShell() {
   const [collapsed, setCollapsed] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const t = setTimeout(() => window.dispatchEvent(new Event("resize")), 300);
@@ -22,15 +29,17 @@ function AppShell() {
   }, [collapsed]);
 
   return (
-    <div className={`app-shell${collapsed ? " sb-collapsed" : ""}`}>
-      <Navbar collapsed={collapsed} onToggle={() => setCollapsed((c) => !c)} />
-      <div className="main-area">
-        <Topbar />
-        <main className="page-content">
-          <Outlet />
-        </main>
+    <SearchContext.Provider value={{ query: searchQuery, setQuery: setSearchQuery }}>
+      <div className={`app-shell${collapsed ? " sb-collapsed" : ""}`}>
+        <Navbar collapsed={collapsed} onToggle={() => setCollapsed((c) => !c)} />
+        <div className="main-area">
+          <Topbar />
+          <main className="page-content">
+            <Outlet />
+          </main>
+        </div>
       </div>
-    </div>
+    </SearchContext.Provider>
   );
 }
 
