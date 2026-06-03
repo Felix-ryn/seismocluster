@@ -7,8 +7,9 @@ from psycopg2.extras import RealDictCursor
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-# Load env
-load_dotenv()
+# Load env — path eksplisit agar selalu menemukan .env di root backend
+_env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../../.env")
+load_dotenv(dotenv_path=_env_path, override=True, encoding="utf-8-sig")
 
 DB_USER = os.getenv("DB_USER")
 DB_PASS = os.getenv("DB_PASS")
