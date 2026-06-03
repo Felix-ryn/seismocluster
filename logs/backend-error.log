@@ -22186,3 +22186,24 @@
 2026-06-01 14:30:15: INFO:     Waiting for application startup.
 2026-06-01 14:30:18: INFO:     Application startup complete.
 2026-06-01 14:30:18: INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2026-06-02 15:53:00: INFO:     Started server process [26380]
+2026-06-02 15:53:00: INFO:     Waiting for application startup.
+2026-06-02 15:53:03: INFO:     Application startup complete.
+2026-06-02 15:53:03: INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2026-06-02 20:05:54: INFO:     Started server process [8060]
+2026-06-02 20:05:54: INFO:     Waiting for application startup.
+2026-06-02 20:05:57: INFO:     Application startup complete.
+2026-06-02 20:05:57: INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2026-06-03 00:59:31: INFO:     Started server process [3180]
+2026-06-03 00:59:31: INFO:     Waiting for application startup.
+2026-06-03 00:59:34: INFO:     Application startup complete.
+2026-06-03 00:59:34: INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2026-06-03 08:30:14: Exception in callback _ProactorBasePipeTransport._call_connection_lost(None)
+2026-06-03 08:30:14: handle: <Handle _ProactorBasePipeTransport._call_connection_lost(None)>
+2026-06-03 08:30:14: Traceback (most recent call last):
+2026-06-03 08:30:14:   File "C:\Users\USER\AppData\Local\Programs\Python\Python311\Lib\asyncio\events.py", line 84, in _run
+2026-06-03 08:30:14:     self._context.run(self._callback, *self._args)
+2026-06-03 08:30:14:   File "C:\Users\USER\AppData\Local\Programs\Python\Python311\Lib\asyncio\proactor_events.py", line 165, in _call_connection_lost
+2026-06-03 08:30:14:     self._sock.shutdown(socket.SHUT_RDWR)
+2026-06-03 08:30:14: ConnectionResetError: [WinError 10054] An existing connection was forcibly closed by the remote host
+2026-06-03 12:59:35: Run time of job "ETL Otomatis USGS (trigger: interval[6:00:00], next run at: 2026-06-03 18:59:34 +07)" was missed by 0:00:01.136225

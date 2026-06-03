@@ -205,7 +205,7 @@ class SeismoPipeline:
     # ==========================================
     # LOAD MODEL DARI JOBLIB LOKAL
     # ==========================================
-    def load_mlflow_models(self):
+    def load_models(self):
 
         try:
 
@@ -213,7 +213,7 @@ class SeismoPipeline:
             print("Load model dari local joblib...")
 
             self.clustering_model = joblib.load(
-                os.path.join(self.models_dir, "clustering_model.joblib")
+                os.path.join(self.models_dir, "kmeans_model.joblib")
             )
             print("Load Clustering Model: OK")
 
@@ -223,7 +223,7 @@ class SeismoPipeline:
             print("Load Hotspot Model: OK")
 
             self.anomaly_model = joblib.load(
-                os.path.join(self.models_dir, "anomaly_model.joblib")
+                os.path.join(self.models_dir, "IsoForest_model.joblib")
             )
             print("Load Anomaly Model: OK")
 
@@ -255,7 +255,7 @@ class SeismoPipeline:
             self.anomaly_model    is None or
             self.hierarchy_model  is None
         ):
-            self.load_mlflow_models()
+            self.load_models()
 
         df_processed['lat_radian'] = np.radians(
             df_processed['latitude']
