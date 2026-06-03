@@ -97,9 +97,9 @@ def get_model_status():
         )
 
         model_files = {
-            "SeismoCluster_Clustering_Model_KMeans": "clustering_model.joblib",
+            "SeismoCluster_Clustering_Model_KMeans": "kmeans_model.joblib",
             "SeismoCluster_Hotspot_Model": "hotspot_model.joblib",
-            "SeismoCluster_Anomaly_Model_ISF": "anomaly_model.joblib",
+            "SeismoCluster_Anomaly_Model_ISF": "IsoForest_model.joblib",
             "SeismoCluster_Hierarchy_Model": "hierarchy_model.joblib",
         }
 
