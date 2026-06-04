@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SeismoCluster — Docker Architecture</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #0d1117;
+      color: #e2e8f0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 44px 24px 64px;
+    }
+
+    .page-title {
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: #f1f5f9;
+      margin-bottom: 4px;
+    }
+    .page-sub {
+      font-size: 0.82rem;
+      color: #64748b;
+      margin-bottom: 44px;
+    }
+
+    /* ─── outer layout ─────────────────────────── */
+    .scene {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      width: 100%;
+      max-width: 1260px;
+    }
+
+    /* ─── user actor ───────────────────────────── */
+    .user-actor {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .user-circle {
+      width: 62px;
+      height: 62px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      border: 2px solid #334155;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.7rem;
+    }
+
+    .user-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: #64748b;
+      text-align: center;
+    }
+
+    /* ─── arrow between user and network ──────── */
+    .ext-arrow {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      padding: 0 6px;
+      gap: 4px;
+    }
+
+    .ext-arrow .lbl {
+      font-size: 0.62rem;
+      color: #94a3b8;
+      white-space: nowrap;
+    }
+
+    .ext-arrow .shaft {
+      display: flex;
+      align-items: center;
+      width: 52px;
+    }
+
+    .ext-arrow .line {
+      flex: 1;
+      height: 2px;
+      background: linear-gradient(to right, #334155, #0ea5e9);
+    }
+
+    .ext-arrow .head {
+      width: 0;
+      height: 0;
+      border-top: 6px solid transparent;
+      border-bottom: 6px solid transparent;
+      border-left: 9px solid #0ea5e9;
+    }
+
+    /* ─── docker network boundary ──────────────── */
+    .network-box {
+      flex: 1;
+      border: 2px dashed #1e40af;
+      border-radius: 18px;
+      background: rgba(30,64,175,0.05);
+      padding: 20px 22px 22px;
+      position: relative;
+      min-width: 0;
+    }
+
+    .network-label {
+      position: absolute;
+      top: -13px;
+      left: 20px;
+      background: #0d1117;
+      padding: 0 10px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #3b82f6;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* ─── main row inside network ──────────────── */
+    .main-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 0;
+      justify-content: space-between;
+    }
+
+    /* ─── container card ───────────────────────── */
+    .ctr {
+      border-radius: 12px;
+      border: 1.5px solid;
+      padding: 14px 14px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      flex-shrink: 0;
+      transition: transform 0.15s;
+      min-width: 0;
+    }
+
+    .ctr:hover { transform: translateY(-2px); }
+
+    .ctr-head {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .ctr-icon { font-size: 1.2rem; flex-shrink: 0; }
+
+    .ctr-name {
+      font-size: 0.82rem;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .ctr-badge {
+      font-size: 0.58rem;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 20px;
+      width: fit-content;
+    }
+
+    .divider { height: 1px; background: rgba(255,255,255,0.07); }
+
+    .kv-list {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .kv {
+      display: flex;
+      align-items: baseline;
+      gap: 5px;
+      font-size: 0.62rem;
+      line-height: 1.4;
+    }
+
+    .kv .k {
+      color: #64748b;
+      white-space: nowrap;
+      flex-shrink: 0;
+      font-weight: 600;
+      min-width: 46px;
+    }
+
+    .kv .v {
+      font-family: 'Courier New', monospace;
+      color: #cbd5e1;
+      font-size: 0.62rem;
+    }
+
+    .port-chip {
+      display: inline-block;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 4px;
+      padding: 1px 5px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.6rem;
+      color: #e2e8f0;
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 3px;
+    }
+
+    .tag-chip {
+      font-size: 0.58rem;
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.05);
+      color: #94a3b8;
+      white-space: nowrap;
+    }
+
+    /* ─── inline connector arrows ──────────────── */
+    .arr {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      gap: 4px;
+      padding: 0 5px;
+      padding-top: 60px; /* optical align to card header */
+    }
+
+    .arr .lbl {
+      font-size: 0.6rem;
+      white-space: nowrap;
+      text-align: center;
+      color: #94a3b8;
+    }
+
+    .arr .shaft {
+      display: flex;
+      align-items: center;
+      width: 44px;
+    }
+
+    .arr .line { flex: 1; height: 2px; }
+    .arr .head {
+      width: 0;
+      height: 0;
+      border-top: 6px solid transparent;
+      border-bottom: 6px solid transparent;
+    }
+
+    /* ─── mlflow sub-section ───────────────────── */
+    .mlflow-bridge {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+      margin-top: 16px;
+    }
+
+    .v-arr {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+
+    .v-arr .vline {
+      width: 2px;
+      height: 22px;
+    }
+
+    .v-arr .vhead {
+      width: 0;
+      height: 0;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+    }
+
+    .v-arr .vlbl {
+      font-size: 0.59rem;
+      color: #94a3b8;
+      margin-top: 2px;
+    }
+
+    /* ─── depends_on chain ─────────────────────── */
+    .dep-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .dep-chip {
+      font-size: 0.62rem;
+      padding: 3px 10px;
+      border-radius: 20px;
+      border: 1px dashed;
+      color: #64748b;
+      border-color: #334155;
+    }
+
+    .dep-arrow {
+      color: #334155;
+      font-size: 0.8rem;
+    }
+
+    /* ─── colour themes ────────────────────────── */
+
+    /* frontend — sky */
+    .c-fe {
+      background: linear-gradient(145deg, rgba(14,165,233,0.12), rgba(6,182,212,0.07));
+      border-color: rgba(14,165,233,0.40);
+      width: 195px;
+    }
+    .c-fe .ctr-name  { color: #7dd3fc; }
+    .c-fe .ctr-badge { background: rgba(14,165,233,0.15); color: #7dd3fc; border: 1px solid rgba(14,165,233,0.3); }
+
+    /* backend — violet */
+    .c-be {
+      background: linear-gradient(145deg, rgba(139,92,246,0.13), rgba(109,40,217,0.07));
+      border-color: rgba(139,92,246,0.42);
+      width: 215px;
+    }
+    .c-be .ctr-name  { color: #c4b5fd; }
+    .c-be .ctr-badge { background: rgba(139,92,246,0.15); color: #c4b5fd; border: 1px solid rgba(139,92,246,0.3); }
+
+    /* mlflow — pink */
+    .c-ml {
+      background: linear-gradient(145deg, rgba(236,72,153,0.12), rgba(190,24,93,0.07));
+      border-color: rgba(236,72,153,0.38);
+      width: 195px;
+    }
+    .c-ml .ctr-name  { color: #f9a8d4; }
+    .c-ml .ctr-badge { background: rgba(236,72,153,0.15); color: #f9a8d4; border: 1px solid rgba(236,72,153,0.3); }
+
+    /* db — emerald */
+    .c-db {
+      background: linear-gradient(145deg, rgba(16,185,129,0.12), rgba(5,150,105,0.07));
+      border-color: rgba(16,185,129,0.40);
+      width: 195px;
+    }
+    .c-db .ctr-name  { color: #6ee7b7; }
+    .c-db .ctr-badge { background: rgba(16,185,129,0.15); color: #6ee7b7; border: 1px solid rgba(16,185,129,0.3); }
+
+    /* arrow colours */
+    .arr-fe-be .line { background: linear-gradient(to right, #0ea5e9, #8b5cf6); }
+    .arr-fe-be .head { border-left: 9px solid #8b5cf6; }
+
+    .arr-be-db .line { background: linear-gradient(to right, #8b5cf6, #10b981); }
+    .arr-be-db .head { border-left: 9px solid #10b981; }
+
+    .v-arr-be-ml .vline  { background: linear-gradient(to bottom, #8b5cf6, #ec4899); }
+    .v-arr-be-ml .vhead  { border-top: 9px solid #ec4899; }
+
+    /* ─── volume tag ───────────────────────────── */
+    .vol-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.58rem;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: rgba(251,191,36,0.08);
+      border: 1px solid rgba(251,191,36,0.2);
+      color: #fcd34d;
+      font-family: 'Courier New', monospace;
+    }
+
+    /* ─── healthcheck badge ────────────────────── */
+    .health-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.58rem;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: rgba(34,197,94,0.08);
+      border: 1px solid rgba(34,197,94,0.2);
+      color: #86efac;
+    }
+
+    /* ─── bottom section ───────────────────────── */
+    .bottom-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 32px;
+      max-width: 1260px;
+      width: 100%;
+    }
+
+    .info-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+
+    .info-card h3 {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 10px;
+    }
+
+    .info-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 0.67rem;
+      color: #64748b;
+      line-height: 1.5;
+      margin-bottom: 5px;
+    }
+
+    .info-row .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      margin-top: 4px;
+      flex-shrink: 0;
+    }
+
+    .footnote {
+      margin-top: 20px;
+      font-size: 0.66rem;
+      color: #334155;
+      text-align: center;
+      line-height: 1.8;
+    }
+  </style>
+</head>
+<body>
+
+<p class="page-title">SeismoCluster — Docker Compose Architecture</p>
+<p class="page-sub">4 container · 1 network (bridge) · Berdasarkan docker-compose.yml &amp; Dockerfile nyata</p>
+
+<div class="scene">
+
+  <!-- ── User Actor ── -->
+  <div class="user-actor">
+    <div class="user-circle">🧑‍💻</div>
+    <div class="user-label">User<br/>Browser</div>
+  </div>
+
+  <!-- ── ext arrow ── -->
+  <div class="ext-arrow">
+    <span class="lbl">HTTP :3001</span>
+    <div class="shaft">
+      <div class="line"></div>
+      <div class="head"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ DOCKER NETWORK BOX ═══════════════ -->
+  <div class="network-box">
+    <div class="network-label">🐳 Docker Network · seismocluster_net · driver: bridge</div>
+
+    <!-- main horizontal row -->
+    <div class="main-row">
+
+      <!-- ── Container: frontend ── -->
+      <div class="ctr c-fe">
+        <div class="ctr-head">
+          <span class="ctr-icon">⚛️</span>
+          <div>
+            <div class="ctr-name">frontend</div>
+            <div style="font-size:0.6rem;color:#64748b;margin-top:1px">seismocluster_frontend</div>
+          </div>
+        </div>
+        <span class="ctr-badge">React + Nginx</span>
+        <div class="divider"></div>
+        <div class="kv-list">
+          <div class="kv"><span class="k">image</span><span class="v">nginx:alpine</span></div>
+          <div class="kv"><span class="k">build</span><span class="v">node:22-alpine</span></div>
+          <div class="kv"><span class="k">port</span><span class="v"><span class="port-chip">3001:80</span></span></div>
+          <div class="kv"><span class="k">cmd</span><span class="v">nginx -g daemon off</span></div>
+          <div class="kv"><span class="k">proxy</span><span class="v">/api/ → Railway</span></div>
+        </div>
+        <div class="tag-row">
+          <span class="tag-chip">multi-stage build</span>
+          <span class="tag-chip">SPA routing</span>
+          <span class="tag-chip">depends: backend</span>
+        </div>
+      </div>
+
+      <!-- arrow fe → be -->
+      <div class="arr arr-fe-be">
+        <span class="lbl">HTTP<br/>:8000</span>
+        <div class="shaft">
+          <div class="line"></div>
+          <div class="head"></div>
+        </div>
+        <span class="lbl" style="margin-top:3px">/api/v1/*</span>
+      </div>
+
+      <!-- ── Container: backend (+ mlflow below) ── -->
+      <div style="display:flex;flex-direction:column;align-items:center;gap:0;">
+
+        <div class="ctr c-be">
+          <div class="ctr-head">
+            <span class="ctr-icon">⚡</span>
+            <div>
+              <div class="ctr-name">backend</div>
+              <div style="font-size:0.6rem;color:#64748b;margin-top:1px">seismocluster_backend</div>
+            </div>
+          </div>
+          <span class="ctr-badge">FastAPI · Python 3.11</span>
+          <div class="divider"></div>
+          <div class="kv-list">
+            <div class="kv"><span class="k">image</span><span class="v">python:3.11-slim</span></div>
+            <div class="kv"><span class="k">port</span><span class="v"><span class="port-chip">8000:8000</span></span></div>
+            <div class="kv"><span class="k">cmd</span><span class="v">uvicorn api.main:app</span></div>
+            <div class="kv"><span class="k">DB_HOST</span><span class="v">db</span></div>
+            <div class="kv"><span class="k">DB_PORT</span><span class="v">5432</span></div>
+            <div class="kv"><span class="k">MLFLOW</span><span class="v">http://mlflow:5000</span></div>
+          </div>
+          <div class="tag-row">
+            <span class="tag-chip">APScheduler 6h</span>
+            <span class="tag-chip">ETL pipeline</span>
+            <span class="tag-chip">4 ML models</span>
+            <span class="tag-chip">depends: db ✓ + mlflow</span>
+          </div>
+        </div>
+
+        <!-- down arrow be → mlflow -->
+        <div class="v-arr v-arr-be-ml">
+          <div class="vline"></div>
+          <div class="vhead"></div>
+          <span class="vlbl">MLflow tracking<br/>http://mlflow:5000</span>
+        </div>
+
+        <!-- ── Container: mlflow ── -->
+        <div class="ctr c-ml">
+          <div class="ctr-head">
+            <span class="ctr-icon">📊</span>
+            <div>
+              <div class="ctr-name">mlflow</div>
+              <div style="font-size:0.6rem;color:#64748b;margin-top:1px">seismocluster_mlflow</div>
+            </div>
+          </div>
+          <span class="ctr-badge">Experiment Tracking</span>
+          <div class="divider"></div>
+          <div class="kv-list">
+            <div class="kv"><span class="k">build</span><span class="v">Dockerfile.mlflow</span></div>
+            <div class="kv"><span class="k">port</span><span class="v"><span class="port-chip">5000:5000</span></span></div>
+            <div class="kv"><span class="k">env</span><span class="v">MLFLOW_ALLOW_HOSTS=*</span></div>
+          </div>
+          <div class="tag-row">
+            <span class="vol-chip">📁 mlflow.db</span>
+            <span class="vol-chip">📁 mlartifacts/</span>
+          </div>
+        </div>
+
+      </div><!-- /backend+mlflow column -->
+
+      <!-- arrow be → db -->
+      <div class="arr arr-be-db">
+        <span class="lbl">SQL<br/>:5432</span>
+        <div class="shaft">
+          <div class="line"></div>
+          <div class="head"></div>
+        </div>
+        <span class="lbl" style="margin-top:3px">psycopg2</span>
+      </div>
+
+      <!-- ── Container: db ── -->
+      <div class="ctr c-db">
+        <div class="ctr-head">
+          <span class="ctr-icon">🐘</span>
+          <div>
+            <div class="ctr-name">db</div>
+            <div style="font-size:0.6rem;color:#64748b;margin-top:1px">seismocluster_db</div>
+          </div>
+        </div>
+        <span class="ctr-badge">PostgreSQL 15</span>
+        <div class="divider"></div>
+        <div class="kv-list">
+          <div class="kv"><span class="k">image</span><span class="v">postgres:15-alpine</span></div>
+          <div class="kv"><span class="k">port</span><span class="v"><span class="port-chip">5433:5432</span></span></div>
+          <div class="kv"><span class="k">DB</span><span class="v">SeismoCluster</span></div>
+          <div class="kv"><span class="k">user</span><span class="v">postgres</span></div>
+          <div class="kv"><span class="k">init</span><span class="v">init.sql (ro)</span></div>
+        </div>
+        <div class="tag-row">
+          <span class="vol-chip">📁 postgres_data</span>
+        </div>
+        <div class="health-chip">✅ healthcheck: pg_isready</div>
+      </div>
+
+    </div><!-- /main-row -->
+
+    <!-- startup dependency chain -->
+    <div class="dep-row">
+      <div class="dep-chip">🐘 db</div>
+      <span class="dep-arrow">─ healthy ──▶</span>
+      <div class="dep-chip">📊 mlflow</div>
+      <span class="dep-arrow">─ started ──▶</span>
+      <div class="dep-chip">⚡ backend</div>
+      <span class="dep-arrow">─────────▶</span>
+      <div class="dep-chip">⚛️ frontend</div>
+    </div>
+
+  </div><!-- /network-box -->
+
+</div><!-- /scene -->
+
+<!-- bottom detail cards -->
+<div class="bottom-grid">
+
+  <div class="info-card">
+    <h3>Port Mapping (Host → Container)</h3>
+    <div class="info-row"><div class="dot" style="background:#0ea5e9"></div><span><code style="color:#7dd3fc">localhost:3001</code> → frontend nginx :80 — React SPA</span></div>
+    <div class="info-row"><div class="dot" style="background:#8b5cf6"></div><span><code style="color:#c4b5fd">localhost:8000</code> → backend uvicorn :8000 — FastAPI REST</span></div>
+    <div class="info-row"><div class="dot" style="background:#ec4899"></div><span><code style="color:#f9a8d4">localhost:5000</code> → mlflow UI :5000 — Experiment Tracker</span></div>
+    <div class="info-row"><div class="dot" style="background:#10b981"></div><span><code style="color:#6ee7b7">localhost:5433</code> → db postgres :5432 — PostgreSQL</span></div>
+  </div>
+
+  <div class="info-card">
+    <h3>Volume Mounts</h3>
+    <div class="info-row"><div class="dot" style="background:#fbbf24"></div><span><code style="color:#fcd34d">postgres_data</code> → /var/lib/postgresql/data — persistent DB storage</span></div>
+    <div class="info-row"><div class="dot" style="background:#fbbf24"></div><span><code style="color:#fcd34d">./database/init.sql</code> → /docker-entrypoint-initdb.d/ — schema init (read-only)</span></div>
+    <div class="info-row"><div class="dot" style="background:#fbbf24"></div><span><code style="color:#fcd34d">./backend/mlflow.db</code> → /mlflow/mlflow.db — SQLite experiment log</span></div>
+    <div class="info-row"><div class="dot" style="background:#fbbf24"></div><span><code style="color:#fcd34d">./backend/mlartifacts</code> → /mlflow/artifacts — model registry files</span></div>
+  </div>
+
+  <div class="info-card">
+    <h3>Env Variables Backend (Internal DNS)</h3>
+    <div class="info-row"><div class="dot" style="background:#8b5cf6"></div><span><code style="color:#c4b5fd">DB_HOST=db</code> — Docker DNS → container seismocluster_db</span></div>
+    <div class="info-row"><div class="dot" style="background:#8b5cf6"></div><span><code style="color:#c4b5fd">DB_PORT=5432</code> — port internal (bukan 5433 host)</span></div>
+    <div class="info-row"><div class="dot" style="background:#8b5cf6"></div><span><code style="color:#c4b5fd">MLFLOW_TRACKING_URI=http://mlflow:5000</code></span></div>
+    <div class="info-row"><div class="dot" style="background:#8b5cf6"></div><span><code style="color:#c4b5fd">MLFLOW_CLUSTERING_MODEL_NAME</code> = SeismoCluster_Clustering_Model_KMeans</span></div>
+    <div class="info-row"><div class="dot" style="background:#8b5cf6"></div><span><code style="color:#c4b5fd">MLFLOW_ANOMALY_MODEL_NAME</code> = SeismoCluster_Anomaly_Model_ISF</span></div>
+  </div>
+
+  <div class="info-card">
+    <h3>Frontend Build Pipeline (Multi-stage)</h3>
+    <div class="info-row"><div class="dot" style="background:#0ea5e9"></div><span>Stage 1 — <code style="color:#7dd3fc">node:22-alpine</code>: npm ci + npm run build → /app/dist</span></div>
+    <div class="info-row"><div class="dot" style="background:#0ea5e9"></div><span>Stage 2 — <code style="color:#7dd3fc">nginx:alpine</code>: copy /app/dist → /usr/share/nginx/html</span></div>
+    <div class="info-row"><div class="dot" style="background:#0ea5e9"></div><span>nginx.conf: <code style="color:#7dd3fc">location /api/</code> proxy_pass → Railway production URL</span></div>
+    <div class="info-row"><div class="dot" style="background:#0ea5e9"></div><span><code style="color:#7dd3fc">try_files $uri /index.html</code> — SPA fallback routing</span></div>
+  </div>
+
+</div>
+
+<p class="footnote">
+  Sumber: docker-compose.yml · backend/Dockerfile · frontend/Dockerfile · frontend/nginx.conf<br/>
+  Network internal: container saling berkomunikasi via nama service (db, mlflow, backend) tanpa port host
+</p>
+
+</body>
+</html>

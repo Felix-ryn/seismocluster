@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SeismoCluster — Preprocessing Flowchart</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #0d1117;
+      color: #e2e8f0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 44px 24px 64px;
+    }
+
+    /* ── title ─────────────────────────────────────────── */
+    .page-title {
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: #f1f5f9;
+      margin-bottom: 4px;
+      letter-spacing: 0.4px;
+    }
+    .page-sub {
+      font-size: 0.82rem;
+      color: #64748b;
+      margin-bottom: 52px;
+    }
+
+    /* ── outer rail ─────────────────────────────────────── */
+    .flow-rail {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      flex-wrap: nowrap;
+      gap: 0;
+      width: 100%;
+      max-width: 1300px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+    }
+
+    /* ── arrow connector ────────────────────────────────── */
+    .connector {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 0 4px;
+      min-width: 56px;
+      height: 220px; /* matches card height */
+      flex-shrink: 0;
+      position: relative;
+      top: 16px; /* optical centre */
+    }
+
+    .conn-label {
+      font-size: 0.6rem;
+      color: #475569;
+      text-align: center;
+      margin-bottom: 4px;
+      font-style: italic;
+      white-space: nowrap;
+    }
+
+    .conn-line {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      width: 100%;
+    }
+
+    .conn-shaft {
+      flex: 1;
+      height: 2px;
+    }
+
+    .conn-head {
+      width: 0;
+      height: 0;
+      border-top: 7px solid transparent;
+      border-bottom: 7px solid transparent;
+      flex-shrink: 0;
+    }
+
+    /* ── card ───────────────────────────────────────────── */
+    .card {
+      border-radius: 12px;
+      border: 1.5px solid;
+      padding: 18px 16px 16px;
+      min-width: 200px;
+      max-width: 220px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: transform 0.15s;
+    }
+    .card:hover { transform: translateY(-3px); }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-icon {
+      font-size: 1.3rem;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .card-name {
+      font-size: 0.88rem;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .card-badge {
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 20px;
+      width: fit-content;
+    }
+
+    .divider {
+      height: 1px;
+      background: rgba(255,255,255,0.07);
+    }
+
+    .tag-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .tag {
+      font-size: 0.62rem;
+      font-family: 'Courier New', monospace;
+      padding: 2px 7px;
+      border-radius: 4px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.07);
+      color: #cbd5e1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .tag.drop {
+      color: #f87171;
+      background: rgba(239,68,68,0.08);
+      border-color: rgba(239,68,68,0.18);
+      text-decoration: line-through;
+      text-decoration-color: rgba(239,68,68,0.5);
+    }
+
+    .tag.keep {
+      color: #86efac;
+      background: rgba(34,197,94,0.08);
+      border-color: rgba(34,197,94,0.18);
+    }
+
+    .tag.new {
+      color: #93c5fd;
+      background: rgba(59,130,246,0.10);
+      border-color: rgba(59,130,246,0.22);
+    }
+
+    .stats-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+      margin-top: 2px;
+    }
+
+    .stat-box {
+      flex: 1;
+      text-align: center;
+      padding: 5px 4px;
+      border-radius: 6px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.07);
+    }
+
+    .stat-val {
+      font-size: 0.78rem;
+      font-weight: 700;
+      line-height: 1;
+      display: block;
+    }
+
+    .stat-key {
+      font-size: 0.55rem;
+      color: #94a3b8;
+      display: block;
+      margin-top: 2px;
+    }
+
+    /* ── colour themes ──────────────────────────────────── */
+
+    /* 1 raw — slate */
+    .c1 {
+      background: linear-gradient(145deg, rgba(51,65,85,0.5), rgba(30,41,59,0.4));
+      border-color: rgba(100,116,139,0.45);
+    }
+    .c1 .card-name  { color: #94a3b8; }
+    .c1 .card-badge { background: rgba(100,116,139,0.2); color: #94a3b8; border: 1px solid rgba(100,116,139,0.3); }
+    .c1 .stat-val   { color: #94a3b8; }
+    .conn1 .conn-shaft { background: linear-gradient(to right, #475569, #ef4444); }
+    .conn1 .conn-head  { border-left: 10px solid #ef4444; }
+
+    /* 2 cleaning — red */
+    .c2 {
+      background: linear-gradient(145deg, rgba(127,29,29,0.35), rgba(69,10,10,0.25));
+      border-color: rgba(239,68,68,0.35);
+    }
+    .c2 .card-name  { color: #fca5a5; }
+    .c2 .card-badge { background: rgba(239,68,68,0.15); color: #fca5a5; border: 1px solid rgba(239,68,68,0.3); }
+    .c2 .stat-val   { color: #fca5a5; }
+    .conn2 .conn-shaft { background: linear-gradient(to right, #ef4444, #f59e0b); }
+    .conn2 .conn-head  { border-left: 10px solid #f59e0b; }
+
+    /* 3 feature — amber */
+    .c3 {
+      background: linear-gradient(145deg, rgba(120,53,15,0.35), rgba(69,26,3,0.25));
+      border-color: rgba(245,158,11,0.35);
+    }
+    .c3 .card-name  { color: #fcd34d; }
+    .c3 .card-badge { background: rgba(245,158,11,0.15); color: #fcd34d; border: 1px solid rgba(245,158,11,0.3); }
+    .c3 .stat-val   { color: #fcd34d; }
+    .conn3 .conn-shaft { background: linear-gradient(to right, #f59e0b, #8b5cf6); }
+    .conn3 .conn-head  { border-left: 10px solid #8b5cf6; }
+
+    /* 4 scaler — violet */
+    .c4 {
+      background: linear-gradient(145deg, rgba(76,29,149,0.35), rgba(46,16,101,0.25));
+      border-color: rgba(139,92,246,0.40);
+    }
+    .c4 .card-name  { color: #c4b5fd; }
+    .c4 .card-badge { background: rgba(139,92,246,0.15); color: #c4b5fd; border: 1px solid rgba(139,92,246,0.3); }
+    .c4 .stat-val   { color: #c4b5fd; }
+    .conn4 .conn-shaft { background: linear-gradient(to right, #8b5cf6, #22c55e); }
+    .conn4 .conn-head  { border-left: 10px solid #22c55e; }
+
+    /* 5 processed — green */
+    .c5 {
+      background: linear-gradient(145deg, rgba(20,83,45,0.4), rgba(5,46,22,0.3));
+      border-color: rgba(34,197,94,0.40);
+    }
+    .c5 .card-name  { color: #86efac; }
+    .c5 .card-badge { background: rgba(34,197,94,0.15); color: #86efac; border: 1px solid rgba(34,197,94,0.3); }
+    .c5 .stat-val   { color: #86efac; }
+
+    /* ── bottom legend ──────────────────────────────────── */
+    .legend {
+      margin-top: 44px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 18px;
+    }
+
+    .leg-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.73rem;
+      color: #94a3b8;
+    }
+
+    .leg-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+
+    .footnote {
+      margin-top: 28px;
+      font-size: 0.67rem;
+      color: #334155;
+      text-align: center;
+      line-height: 1.8;
+    }
+  </style>
+</head>
+<body>
+
+<p class="page-title">SeismoCluster — Data Preprocessing Pipeline</p>
+<p class="page-sub">Flowchart berdasarkan kode nyata · notebooks/1_EDA_SeismoCluster.ipynb &amp; backend/app/etl/</p>
+
+<div class="flow-rail">
+
+  <!-- ══════ BOX 1: raw_earthquakes ══════ -->
+  <div class="card c1">
+    <div class="card-header">
+      <span class="card-icon">🗄️</span>
+      <span class="card-name">raw_earthquakes</span>
+    </div>
+    <span class="card-badge">PostgreSQL · Source</span>
+    <div class="divider"></div>
+    <div class="tag-list">
+      <span class="tag">id · time</span>
+      <span class="tag">latitude · longitude</span>
+      <span class="tag">depth · magnitude</span>
+      <span class="tag">mag_type · nst · gap</span>
+      <span class="tag">dmin · rms · net</span>
+      <span class="tag">place · type · status</span>
+      <span class="tag">horizontal_error</span>
+      <span class="tag">depth_error · mag_error</span>
+      <span class="tag">location_source</span>
+      <span class="tag">mag_source · updated</span>
+    </div>
+    <div class="stats-row">
+      <div class="stat-box">
+        <span class="stat-val">15,066</span>
+        <span class="stat-key">total rows</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-val">22</span>
+        <span class="stat-key">kolom</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- → connector 1 -->
+  <div class="connector conn1">
+    <span class="conn-label">ETL load.py</span>
+    <div class="conn-line">
+      <div class="conn-shaft"></div>
+      <div class="conn-head"></div>
+    </div>
+  </div>
+
+  <!-- ══════ BOX 2: Cleaning ══════ -->
+  <div class="card c2">
+    <div class="card-header">
+      <span class="card-icon">🧹</span>
+      <span class="card-name">Cleaning</span>
+    </div>
+    <span class="card-badge">Filter &amp; Validasi</span>
+    <div class="divider"></div>
+    <div class="tag-list">
+      <span class="tag keep">WHERE magnitude IS NOT NULL</span>
+      <span class="tag keep">lat BETWEEN −11.0 AND 6.0</span>
+      <span class="tag keep">lon BETWEEN 95.0 AND 141.0</span>
+      <span class="tag drop">2,576 rows diluar bbox</span>
+      <span class="tag drop">NULL magnitude dropped</span>
+      <span class="tag keep">0 missing values tersisa</span>
+    </div>
+    <div class="stats-row">
+      <div class="stat-box">
+        <span class="stat-val" style="color:#f87171">−2,576</span>
+        <span class="stat-key">baris dibuang</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-val">12,490</span>
+        <span class="stat-key">rows bersih</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- → connector 2 -->
+  <div class="connector conn2">
+    <span class="conn-label">EDA notebook</span>
+    <div class="conn-line">
+      <div class="conn-shaft"></div>
+      <div class="conn-head"></div>
+    </div>
+  </div>
+
+  <!-- ══════ BOX 3: Feature Selection ══════ -->
+  <div class="card c3">
+    <div class="card-header">
+      <span class="card-icon">🎯</span>
+      <span class="card-name">Feature Selection</span>
+    </div>
+    <span class="card-badge">Pilih &amp; Rekayasa Fitur</span>
+    <div class="divider"></div>
+    <div class="tag-list">
+      <span class="tag keep">latitude</span>
+      <span class="tag keep">longitude</span>
+      <span class="tag keep">depth</span>
+      <span class="tag keep">magnitude</span>
+      <span class="tag new">time → year / month / day</span>
+      <span class="tag new">lat_radian (÷ π/180)</span>
+      <span class="tag new">lon_radian (÷ π/180)</span>
+      <span class="tag drop">mag_type · nst · gap · rms</span>
+      <span class="tag drop">place · status · net · dll</span>
+    </div>
+    <div class="stats-row">
+      <div class="stat-box">
+        <span class="stat-val">4</span>
+        <span class="stat-key">fitur inti</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-val">+3</span>
+        <span class="stat-key">fitur baru</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- → connector 3 -->
+  <div class="connector conn3">
+    <span class="conn-label">transform.py</span>
+    <div class="conn-line">
+      <div class="conn-shaft"></div>
+      <div class="conn-head"></div>
+    </div>
+  </div>
+
+  <!-- ══════ BOX 4: StandardScaler ══════ -->
+  <div class="card c4">
+    <div class="card-header">
+      <span class="card-icon">⚖️</span>
+      <span class="card-name">StandardScaler</span>
+    </div>
+    <span class="card-badge">sklearn · Z-score Norm</span>
+    <div class="divider"></div>
+    <div class="tag-list">
+      <span class="tag">fit_transform(X)</span>
+      <span class="tag new">latitude_scaled</span>
+      <span class="tag new">longitude_scaled</span>
+      <span class="tag new">depth_scaled</span>
+      <span class="tag new">magnitude_scaled</span>
+      <span class="tag" style="color:#c4b5fd">z = (x − μ) / σ</span>
+      <span class="tag" style="color:#c4b5fd">μ = 0 · σ = 1</span>
+      <span class="tag keep">scaler.joblib disimpan</span>
+    </div>
+    <div class="stats-row">
+      <div class="stat-box">
+        <span class="stat-val">4D</span>
+        <span class="stat-key">clustering</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-val">2D</span>
+        <span class="stat-key">haversine</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- → connector 4 -->
+  <div class="connector conn4">
+    <span class="conn-label">pipeline.py</span>
+    <div class="conn-line">
+      <div class="conn-shaft"></div>
+      <div class="conn-head"></div>
+    </div>
+  </div>
+
+  <!-- ══════ BOX 5: processed_earthquakes ══════ -->
+  <div class="card c5">
+    <div class="card-header">
+      <span class="card-icon">✅</span>
+      <span class="card-name">processed_earthquakes</span>
+    </div>
+    <span class="card-badge">PostgreSQL · Output</span>
+    <div class="divider"></div>
+    <div class="tag-list">
+      <span class="tag keep">id · time</span>
+      <span class="tag keep">latitude · longitude</span>
+      <span class="tag keep">depth · magnitude</span>
+      <span class="tag new">year · month · day</span>
+      <span class="tag new">latitude_scaled</span>
+      <span class="tag new">longitude_scaled</span>
+      <span class="tag new">depth_scaled</span>
+      <span class="tag new">magnitude_scaled</span>
+      <span class="tag" style="color:#86efac;font-size:0.58rem">FK → raw_earthquakes (CASCADE)</span>
+    </div>
+    <div class="stats-row">
+      <div class="stat-box">
+        <span class="stat-val">12,490</span>
+        <span class="stat-key">rows</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-val">13</span>
+        <span class="stat-key">kolom</span>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /flow-rail -->
+
+<!-- legend -->
+<div class="legend">
+  <div class="leg-item"><div class="leg-dot" style="background:#475569"></div> Source Table (22 kol · 15,066 rows)</div>
+  <div class="leg-item"><div class="leg-dot" style="background:#ef4444"></div> Cleaning — filter bbox &amp; NULL</div>
+  <div class="leg-item"><div class="leg-dot" style="background:#f59e0b"></div> Feature Selection — pilih + rekayasa fitur</div>
+  <div class="leg-item"><div class="leg-dot" style="background:#8b5cf6"></div> StandardScaler — z-score normalisasi</div>
+  <div class="leg-item"><div class="leg-dot" style="background:#22c55e"></div> Output Table (13 kol · 12,490 rows)</div>
+</div>
+
+<p class="footnote">
+  Sumber kode: backend/app/etl/extract.py · transform.py · load.py · pipeline.py<br/>
+  Notebook: notebooks/1_EDA_SeismoCluster.ipynb · notebooks/3_SeismoCluster_Modeling.ipynb<br/>
+  Bounding Box Indonesia · lat [−11°, 6°] · lon [95°, 141°] · Total data hilang: 2,576 baris (17.1%)
+</p>
+
+</body>
+</html>

@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SeismoCluster — Architecture Diagram</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #0f1117;
+      color: #e2e8f0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px 60px;
+    }
+
+    h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+      color: #f8fafc;
+    }
+
+    .subtitle {
+      font-size: 0.85rem;
+      color: #94a3b8;
+      margin-bottom: 44px;
+      letter-spacing: 0.3px;
+    }
+
+    /* ─── diagram wrapper ─────────────────────────────────────── */
+    .diagram {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+      width: 100%;
+      max-width: 860px;
+    }
+
+    /* ─── layer card ──────────────────────────────────────────── */
+    .layer {
+      width: 100%;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.07);
+      padding: 22px 28px 22px 28px;
+      position: relative;
+      backdrop-filter: blur(4px);
+    }
+
+    .layer-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .layer-badge {
+      font-size: 0.67rem;
+      font-weight: 700;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+
+    .layer-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #f1f5f9;
+    }
+
+    /* ─── node row ────────────────────────────────────────────── */
+    .node-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .node {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      padding: 12px 18px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.10);
+      min-width: 130px;
+      text-align: center;
+      transition: transform 0.15s;
+    }
+
+    .node:hover { transform: translateY(-2px); }
+
+    .node-icon {
+      font-size: 1.4rem;
+      line-height: 1;
+    }
+
+    .node-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      line-height: 1.3;
+      color: #f1f5f9;
+    }
+
+    .node-sub {
+      font-size: 0.65rem;
+      color: #94a3b8;
+      line-height: 1.3;
+    }
+
+    /* ─── horizontal arrow between nodes ─────────────────────── */
+    .h-arrow {
+      font-size: 1.1rem;
+      color: rgba(255,255,255,0.25);
+      flex-shrink: 0;
+    }
+
+    /* ─── vertical arrow between layers ──────────────────────── */
+    .v-arrow {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+      padding: 4px 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    .v-arrow .line {
+      width: 2px;
+      height: 28px;
+    }
+
+    .v-arrow .arrowhead {
+      width: 0;
+      height: 0;
+      border-left: 7px solid transparent;
+      border-right: 7px solid transparent;
+    }
+
+    /* ─── table grid inside Layer 2 ──────────────────────────── */
+    .table-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 660px) {
+      .table-grid { grid-template-columns: repeat(2, 1fr); }
+      .node { min-width: 100px; }
+    }
+
+    .tbl-card {
+      background: rgba(0,0,0,0.25);
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 10px 10px 8px;
+      text-align: center;
+    }
+
+    .tbl-name {
+      font-size: 0.7rem;
+      font-weight: 700;
+      font-family: 'Courier New', monospace;
+      margin-bottom: 4px;
+    }
+
+    .tbl-fields {
+      font-size: 0.6rem;
+      color: #94a3b8;
+      line-height: 1.5;
+    }
+
+    /* ─── Layer colours ───────────────────────────────────────── */
+
+    /* Layer 1 — Teal */
+    .l1 { background: linear-gradient(135deg, rgba(20,184,166,0.12) 0%, rgba(6,182,212,0.08) 100%); }
+    .l1 .layer-badge  { background: rgba(20,184,166,0.20); color: #2dd4bf; border: 1px solid rgba(20,184,166,0.35); }
+    .l1 .node         { background: rgba(20,184,166,0.10); border-color: rgba(20,184,166,0.25); }
+    .l1 .node-icon    { filter: drop-shadow(0 0 6px rgba(20,184,166,0.5)); }
+    .arrow1 .line     { background: linear-gradient(to bottom, #14b8a6, #38bdf8); }
+    .arrow1 .arrowhead{ border-top: 9px solid #38bdf8; }
+
+    /* Layer 2 — Blue */
+    .l2 { background: linear-gradient(135deg, rgba(59,130,246,0.12) 0%, rgba(99,102,241,0.08) 100%); }
+    .l2 .layer-badge  { background: rgba(59,130,246,0.20); color: #93c5fd; border: 1px solid rgba(59,130,246,0.35); }
+    .l2 .tbl-card     { background: rgba(59,130,246,0.10); border-color: rgba(59,130,246,0.25); }
+    .l2 .tbl-name     { color: #93c5fd; }
+    .arrow2 .line     { background: linear-gradient(to bottom, #3b82f6, #a855f7); }
+    .arrow2 .arrowhead{ border-top: 9px solid #a855f7; }
+
+    /* Layer 3 — Purple */
+    .l3 { background: linear-gradient(135deg, rgba(168,85,247,0.12) 0%, rgba(236,72,153,0.08) 100%); }
+    .l3 .layer-badge  { background: rgba(168,85,247,0.20); color: #d8b4fe; border: 1px solid rgba(168,85,247,0.35); }
+    .l3 .node         { background: rgba(168,85,247,0.10); border-color: rgba(168,85,247,0.25); }
+    .l3 .node-icon    { filter: drop-shadow(0 0 6px rgba(168,85,247,0.5)); }
+    .arrow3 .line     { background: linear-gradient(to bottom, #a855f7, #f97316); }
+    .arrow3 .arrowhead{ border-top: 9px solid #f97316; }
+
+    /* Layer 4 — Orange */
+    .l4 { background: linear-gradient(135deg, rgba(249,115,22,0.12) 0%, rgba(234,179,8,0.08) 100%); }
+    .l4 .layer-badge  { background: rgba(249,115,22,0.20); color: #fdba74; border: 1px solid rgba(249,115,22,0.35); }
+    .l4 .node         { background: rgba(249,115,22,0.10); border-color: rgba(249,115,22,0.25); }
+    .l4 .node-icon    { filter: drop-shadow(0 0 6px rgba(249,115,22,0.5)); }
+
+    /* ─── mlflow chip ─────────────────────────────────────────── */
+    .mlflow-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 14px;
+      border-radius: 20px;
+      background: rgba(236,72,153,0.15);
+      border: 1px solid rgba(236,72,153,0.30);
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: #f9a8d4;
+      margin-top: 14px;
+    }
+
+    /* ─── legend ──────────────────────────────────────────────── */
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-top: 36px;
+      justify-content: center;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 0.75rem;
+      color: #94a3b8;
+    }
+
+    .legend-dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+    }
+
+    .footer-note {
+      margin-top: 28px;
+      font-size: 0.7rem;
+      color: #475569;
+      text-align: center;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>SeismoCluster — System Architecture</h1>
+  <p class="subtitle">Earthquake Clustering &amp; Anomaly Detection · Indonesia Region · 4-Layer Architecture</p>
+
+  <div class="diagram">
+
+    <!-- ══════════════ LAYER 1 ══════════════ -->
+    <div class="layer l1">
+      <div class="layer-header">
+        <span class="layer-badge">Layer 1</span>
+        <span class="layer-title">Data Acquisition</span>
+      </div>
+      <div class="node-row">
+        <div class="node">
+          <div class="node-icon">🌍</div>
+          <div class="node-label">USGS ComCat API</div>
+          <div class="node-sub">earthquakes.usgs.gov<br/>fdsnws/event/1/query</div>
+        </div>
+        <div class="h-arrow">→</div>
+        <div class="node">
+          <div class="node-icon">⚙️</div>
+          <div class="node-label">Extract</div>
+          <div class="node-sub">etl/extract.py<br/>Bounding box Indonesia</div>
+        </div>
+        <div class="h-arrow">→</div>
+        <div class="node">
+          <div class="node-icon">🔄</div>
+          <div class="node-label">Transform</div>
+          <div class="node-sub">etl/transform.py<br/>StandardScaler + Features</div>
+        </div>
+        <div class="h-arrow">→</div>
+        <div class="node">
+          <div class="node-icon">💾</div>
+          <div class="node-label">Load</div>
+          <div class="node-sub">etl/load.py<br/>ON CONFLICT upsert</div>
+        </div>
+        <div class="h-arrow">→</div>
+        <div class="node">
+          <div class="node-icon">⏰</div>
+          <div class="node-label">Scheduler</div>
+          <div class="node-sub">APScheduler<br/>Every 6 hours</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- arrow 1→2 -->
+    <div class="v-arrow arrow1">
+      <div class="line"></div>
+      <div class="arrowhead"></div>
+    </div>
+
+    <!-- ══════════════ LAYER 2 ══════════════ -->
+    <div class="layer l2">
+      <div class="layer-header">
+        <span class="layer-badge">Layer 2</span>
+        <span class="layer-title">Data Storage — PostgreSQL :5433</span>
+      </div>
+      <div class="table-grid">
+        <div class="tbl-card">
+          <div class="tbl-name">raw_earthquakes</div>
+          <div class="tbl-fields">id · time · latitude<br/>longitude · depth<br/>magnitude · place</div>
+        </div>
+        <div class="tbl-card">
+          <div class="tbl-name">processed_earthquakes</div>
+          <div class="tbl-fields">year · month · day<br/>lat_scaled · lon_scaled<br/>depth_scaled · mag_scaled</div>
+        </div>
+        <div class="tbl-card">
+          <div class="tbl-name">earthquake_clusters</div>
+          <div class="tbl-fields">cluster_label · anomaly_flag<br/>hierarchy_label<br/>FK → raw_earthquakes</div>
+        </div>
+        <div class="tbl-card">
+          <div class="tbl-name">cluster_summary</div>
+          <div class="tbl-fields">cluster_id · count<br/>avg_mag · avg_depth<br/>centroid_lat · centroid_lon</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- arrow 2→3 -->
+    <div class="v-arrow arrow2">
+      <div class="line"></div>
+      <div class="arrowhead"></div>
+    </div>
+
+    <!-- ══════════════ LAYER 3 ══════════════ -->
+    <div class="layer l3">
+      <div class="layer-header">
+        <span class="layer-badge">Layer 3</span>
+        <span class="layer-title">Analytics &amp; Machine Learning</span>
+      </div>
+      <div class="node-row">
+        <div class="node">
+          <div class="node-icon">⭕</div>
+          <div class="node-label">K-Means</div>
+          <div class="node-sub">kmeans_model.joblib<br/>Spatial clustering</div>
+        </div>
+        <div class="h-arrow">|</div>
+        <div class="node">
+          <div class="node-icon">🔵</div>
+          <div class="node-label">DBSCAN</div>
+          <div class="node-sub">hotspot_model.joblib<br/>Density-based hotspots</div>
+        </div>
+        <div class="h-arrow">|</div>
+        <div class="node">
+          <div class="node-icon">🚨</div>
+          <div class="node-label">Isolation Forest</div>
+          <div class="node-sub">IsoForest_model.joblib<br/>Anomaly detection</div>
+        </div>
+        <div class="h-arrow">|</div>
+        <div class="node">
+          <div class="node-icon">🌲</div>
+          <div class="node-label">Hierarchical</div>
+          <div class="node-sub">hierarchy_model.joblib<br/>Agglomerative linkage</div>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:center;">
+        <div class="mlflow-chip">
+          📊 MLflow Registry · Experiment Tracking · Silhouette / Davies-Bouldin / Calinski-Harabasz Scores
+        </div>
+      </div>
+    </div>
+
+    <!-- arrow 3→4 -->
+    <div class="v-arrow arrow3">
+      <div class="line"></div>
+      <div class="arrowhead"></div>
+    </div>
+
+    <!-- ══════════════ LAYER 4 ══════════════ -->
+    <div class="layer l4">
+      <div class="layer-header">
+        <span class="layer-badge">Layer 4</span>
+        <span class="layer-title">Presentation</span>
+      </div>
+      <div class="node-row">
+        <div class="node">
+          <div class="node-icon">⚡</div>
+          <div class="node-label">FastAPI REST</div>
+          <div class="node-sub">:8000<br/>/api/v1/earthquakes<br/>/api/v1/ml/predict<br/>/api/v1/cluster<br/>/api/v1/summary</div>
+        </div>
+        <div class="h-arrow">→</div>
+        <div class="node">
+          <div class="node-icon">🗺️</div>
+          <div class="node-label">Cluster Map</div>
+          <div class="node-sub">React + Leaflet<br/>Interactive heatmap</div>
+        </div>
+        <div class="h-arrow">→</div>
+        <div class="node">
+          <div class="node-icon">📡</div>
+          <div class="node-label">Realtime</div>
+          <div class="node-sub">Live monitoring<br/>Auto-refresh</div>
+        </div>
+        <div class="h-arrow">→</div>
+        <div class="node">
+          <div class="node-icon">📊</div>
+          <div class="node-label">Analytics</div>
+          <div class="node-sub">Hotspot · Centroid<br/>Anomaly · Trend<br/>Hierarchy · Movement</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /diagram -->
+
+  <!-- legend -->
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#14b8a6"></div> Layer 1 · Data Acquisition (Teal)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#3b82f6"></div> Layer 2 · Data Storage (Blue)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#a855f7"></div> Layer 3 · Analytics &amp; ML (Purple)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#f97316"></div> Layer 4 · Presentation (Orange)</div>
+  </div>
+
+  <p class="footer-note">
+    SeismoCluster · Earthquake Clustering System · Indonesia Bounding Box (lat −11° to 6°, lon 95° to 141°)<br/>
+    Stack: USGS ComCat · PostgreSQL 5433 · scikit-learn · MLflow 5000 · FastAPI 8000 · React+Vite 3001
+  </p>
+
+</body>
+</html>
