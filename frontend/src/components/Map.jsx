@@ -15,17 +15,31 @@ function createCircleIcon(color, radius) {
   const size = Math.round(radius * 2);
   return L.divIcon({
     html: `<div style="
-      width:${size}px;
-      height:${size}px;
-      border-radius:50%;
-      background:${color};
-      opacity:0.85;
+      width:${size}px;height:${size}px;border-radius:50%;
+      background:${color};opacity:0.85;
       border:1.5px solid rgba(255,255,255,0.8);
       box-sizing:border-box;
     "></div>`,
     className: "",
     iconSize: [size, size],
     iconAnchor: [radius, radius],
+  });
+}
+
+function createClusterIcon(cluster) {
+  const count = cluster.getChildCount();
+  const size = count > 1000 ? 52 : count > 500 ? 44 : count > 100 ? 36 : count > 20 ? 28 : 22;
+  return L.divIcon({
+    html: `<div style="
+      width:${size}px;height:${size}px;border-radius:50%;
+      background:rgba(124,58,237,0.75);
+      border:2px solid rgba(255,255,255,0.85);
+      box-shadow:0 2px 8px rgba(0,0,0,0.3);
+      box-sizing:border-box;
+    "></div>`,
+    className: "",
+    iconSize: [size, size],
+    iconAnchor: [size / 2, size / 2],
   });
 }
 
@@ -83,6 +97,7 @@ export default function Map({ data = [] }) {
             chunkedLoading
             maxClusterRadius={60}
             showCoverageOnHover={false}
+            iconCreateFunction={createClusterIcon}
           >
             {data.map((point) => {
               const fill = getColor(point);
