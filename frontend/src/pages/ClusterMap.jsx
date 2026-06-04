@@ -40,9 +40,9 @@ export default function ClusterMap() {
     try {
       const [statsRes, pointsRes, summaryRes, anomaliesRes] = await Promise.all([
         getSummaryStats(),
-        getClusterResults(500),
+        getClusterResults(5000),
         getSummary(),
-        getAnomalies(500),
+        getAnomalies(1000),
       ]);
       setStats(statsRes.data.data ?? {});
       setPoints(pointsRes.data.data ?? []);

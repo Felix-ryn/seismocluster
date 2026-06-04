@@ -1,5 +1,7 @@
 import { useMemo } from "react";
-import { MapContainer, TileLayer, CircleMarker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import MarkerClusterGroup from "react-leaflet-cluster";
+import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import MagBadge from "./MagBadge";
 import ClusterBadge from "./ClusterBadge";
@@ -8,6 +10,24 @@ const cssVar = (name) =>
   getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 
 const clusterIndex = (clusterId) => ((clusterId % 8) + 8) % 8;
+
+function createCircleIcon(color, radius) {
+  const size = Math.round(radius * 2);
+  return L.divIcon({
+    html: `<div style="
+      width:${size}px;
+      height:${size}px;
+      border-radius:50%;
+      background:${color};
+      opacity:0.85;
+      border:1.5px solid rgba(255,255,255,0.8);
+      box-sizing:border-box;
+    "></div>`,
+    className: "",
+    iconSize: [size, size],
+    iconAnchor: [radius, radius],
+  });
+}
 
 export default function Map({ data = [] }) {
   const colors = useMemo(() => ({
@@ -59,46 +79,46 @@ export default function Map({ data = [] }) {
             maxZoom={19}
           />
 
-          {data.map((point) => {
-            const fill = getColor(point);
-            const radius = getRadius(point.magnitude);
-            const cid = point.cluster_id ?? point.cluster_label;
+          <MarkerClusterGroup
+            chunkedLoading
+            maxClusterRadius={60}
+            showCoverageOnHover={false}
+          >
+            {data.map((point) => {
+              const fill = getColor(point);
+              const radius = getRadius(point.magnitude);
+              const cid = point.cluster_id ?? point.cluster_label;
 
-            return (
-              <CircleMarker
-                key={point.id}
-                center={[point.latitude, point.longitude]}
-                radius={radius}
-                pathOptions={{
-                  fillColor: fill,
-                  fillOpacity: point.is_anomaly ? 0.95 : 0.8,
-                  color: "#ffffff",
-                  weight: 1.5,
-                }}
-              >
-                <Popup>
-                  <div className="map-popup">
-                    <p className="popup-place">{point.place || "Unknown location"}</p>
-                    <div className="popup-coords">
-                      <span>Lat: <span className="popup-coord">{point.latitude?.toFixed(3)}°</span></span>
-                      <span>Lng: <span className="popup-coord">{point.longitude?.toFixed(3)}°</span></span>
-                    </div>
-                    <hr className="popup-divider" />
-                    <div className="popup-badges">
-                      <MagBadge magnitude={point.magnitude} />
-                      <ClusterBadge clusterId={cid} />
-                      {point.is_anomaly && (
-                        <span className="popup-anomaly-badge">Anomali</span>
+              return (
+                <Marker
+                  key={point.id}
+                  position={[point.latitude, point.longitude]}
+                  icon={createCircleIcon(fill, radius)}
+                >
+                  <Popup>
+                    <div className="map-popup">
+                      <p className="popup-place">{point.place || "Unknown location"}</p>
+                      <div className="popup-coords">
+                        <span>Lat: <span className="popup-coord">{point.latitude?.toFixed(3)}°</span></span>
+                        <span>Lng: <span className="popup-coord">{point.longitude?.toFixed(3)}°</span></span>
+                      </div>
+                      <hr className="popup-divider" />
+                      <div className="popup-badges">
+                        <MagBadge magnitude={point.magnitude} />
+                        <ClusterBadge clusterId={cid} />
+                        {point.is_anomaly && (
+                          <span className="popup-anomaly-badge">Anomali</span>
+                        )}
+                      </div>
+                      {point.depth != null && (
+                        <div className="popup-depth">Kedalaman: {point.depth} km</div>
                       )}
                     </div>
-                    {point.depth != null && (
-                      <div className="popup-depth">Kedalaman: {point.depth} km</div>
-                    )}
-                  </div>
-                </Popup>
-              </CircleMarker>
-            );
-          })}
+                  </Popup>
+                </Marker>
+              );
+            })}
+          </MarkerClusterGroup>
         </MapContainer>
 
         {data.length === 0 && (
