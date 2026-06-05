@@ -1,6 +1,5 @@
 import { useMemo } from "react";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import MarkerClusterGroup from "react-leaflet-cluster";
+import { MapContainer, TileLayer, CircleMarker, Popup } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import MagBadge from "./MagBadge";
@@ -11,39 +10,9 @@ const cssVar = (name) =>
 
 const clusterIndex = (clusterId) => ((clusterId % 8) + 8) % 8;
 
-function createCircleIcon(color, radius) {
-  const size = Math.round(radius * 2);
-  return L.divIcon({
-    html: `<div style="
-      width:${size}px;height:${size}px;border-radius:50%;
-      background:${color};opacity:0.85;
-      border:1.5px solid rgba(255,255,255,0.8);
-      box-sizing:border-box;
-    "></div>`,
-    className: "",
-    iconSize: [size, size],
-    iconAnchor: [radius, radius],
-  });
-}
-
-function createClusterIcon(cluster) {
-  const count = cluster.getChildCount();
-  const size = count > 1000 ? 52 : count > 500 ? 44 : count > 100 ? 36 : count > 20 ? 28 : 22;
-  return L.divIcon({
-    html: `<div style="
-      width:${size}px;height:${size}px;border-radius:50%;
-      background:rgba(124,58,237,0.75);
-      border:2px solid rgba(255,255,255,0.85);
-      box-shadow:0 2px 8px rgba(0,0,0,0.3);
-      box-sizing:border-box;
-    "></div>`,
-    className: "",
-    iconSize: [size, size],
-    iconAnchor: [size / 2, size / 2],
-  });
-}
-
 export default function Map({ data = [] }) {
+  const renderer = useMemo(() => L.canvas({ padding: 0.5 }), []);
+
   const colors = useMemo(() => ({
     clusters: [0, 1, 2, 3, 4, 5, 6, 7].map((i) => cssVar(`--cluster-${i}`)),
     anomaly: cssVar("--cluster-anomaly"),
@@ -93,47 +62,47 @@ export default function Map({ data = [] }) {
             maxZoom={19}
           />
 
-          <MarkerClusterGroup
-            chunkedLoading
-            maxClusterRadius={60}
-            showCoverageOnHover={false}
-            iconCreateFunction={createClusterIcon}
-          >
-            {data.map((point) => {
-              const fill = getColor(point);
-              const radius = getRadius(point.magnitude);
-              const cid = point.cluster_id ?? point.cluster_label;
+          {data.map((point) => {
+            const fill = getColor(point);
+            const radius = getRadius(point.magnitude);
+            const cid = point.cluster_id ?? point.cluster_label;
 
-              return (
-                <Marker
-                  key={point.id}
-                  position={[point.latitude, point.longitude]}
-                  icon={createCircleIcon(fill, radius)}
-                >
-                  <Popup>
-                    <div className="map-popup">
-                      <p className="popup-place">{point.place || "Unknown location"}</p>
-                      <div className="popup-coords">
-                        <span>Lat: <span className="popup-coord">{point.latitude?.toFixed(3)}°</span></span>
-                        <span>Lng: <span className="popup-coord">{point.longitude?.toFixed(3)}°</span></span>
-                      </div>
-                      <hr className="popup-divider" />
-                      <div className="popup-badges">
-                        <MagBadge magnitude={point.magnitude} />
-                        <ClusterBadge clusterId={cid} />
-                        {point.is_anomaly && (
-                          <span className="popup-anomaly-badge">Anomali</span>
-                        )}
-                      </div>
-                      {point.depth != null && (
-                        <div className="popup-depth">Kedalaman: {point.depth} km</div>
+            return (
+              <CircleMarker
+                key={point.id}
+                center={[point.latitude, point.longitude]}
+                radius={radius}
+                renderer={renderer}
+                pathOptions={{
+                  fillColor: fill,
+                  fillOpacity: point.is_anomaly ? 0.95 : 0.8,
+                  color: "#ffffff",
+                  weight: 1.5,
+                }}
+              >
+                <Popup>
+                  <div className="map-popup">
+                    <p className="popup-place">{point.place || "Unknown location"}</p>
+                    <div className="popup-coords">
+                      <span>Lat: <span className="popup-coord">{point.latitude?.toFixed(3)}°</span></span>
+                      <span>Lng: <span className="popup-coord">{point.longitude?.toFixed(3)}°</span></span>
+                    </div>
+                    <hr className="popup-divider" />
+                    <div className="popup-badges">
+                      <MagBadge magnitude={point.magnitude} />
+                      <ClusterBadge clusterId={cid} />
+                      {point.is_anomaly && (
+                        <span className="popup-anomaly-badge">Anomali</span>
                       )}
                     </div>
-                  </Popup>
-                </Marker>
-              );
-            })}
-          </MarkerClusterGroup>
+                    {point.depth != null && (
+                      <div className="popup-depth">Kedalaman: {point.depth} km</div>
+                    )}
+                  </div>
+                </Popup>
+              </CircleMarker>
+            );
+          })}
         </MapContainer>
 
         {data.length === 0 && (
