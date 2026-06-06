@@ -71,7 +71,7 @@ def train_cluster(db: Session = Depends(get_db)):
 
 @router.get("/results")
 def get_results(
-    limit: int = Query(default=5000, ge=1, le=15000, description="Jumlah data yang diambil"),
+    imit: int = Query(default=32000, ge=1, le=35000, description="Jumlah data yang diambil"),
     offset: int = Query(default=0, ge=0, description="Offset untuk pagination")
 ):
     """Ambil hasil clustering dari database (earthquake_clusters join raw_earthquakes)."""
