@@ -4,6 +4,7 @@ import { CLUSTER_COLORS } from "../utils/colors";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid,
   Tooltip, ResponsiveContainer, Cell,
+  RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Legend,
 } from "recharts";
 import { Network, Layers, Activity, BarChart2, GitMerge } from "lucide-react";
 import StatCard from "../components/StatCard";
@@ -20,8 +21,10 @@ export default function Hierarchy() {
       .finally(() => setLoading(false));
   }, []);
 
-  const total  = data.reduce((s, d) => s + (d.total_earthquakes || 0), 0);
-  const sorted = [...data].sort((a, b) => b.total_earthquakes - a.total_earthquakes);
+  const total    = data.reduce((s, d) => s + (d.total_earthquakes || 0), 0);
+  const sorted   = [...data].sort((a, b) => b.total_earthquakes - a.total_earthquakes);
+  const topZone  = sorted[0];
+  const avgPerZone = data.length > 0 ? Math.round(total / data.length) : 0;
 
   const chartData = data.map((d) => ({
     name:  `H-${d.hierarchy_label}`,
@@ -29,8 +32,12 @@ export default function Hierarchy() {
     color: CLUSTER_COLORS[d.hierarchy_label % CLUSTER_COLORS.length],
   }));
 
-  const avgPerZone = data.length > 0 ? Math.round(total / data.length) : 0;
-  const topZone    = sorted[0];
+  const radarData = data.map((d) => ({
+    zone:      `H-${d.hierarchy_label}`,
+    Magnitudo: parseFloat((d.avg_magnitude ?? 0).toFixed(2)),
+    Kedalaman: parseFloat(((d.avg_depth ?? 0) / 10).toFixed(2)),
+    Proporsi:  parseFloat(((d.total_earthquakes / (total || 1)) * 100).toFixed(1)),
+  }));
 
   return (
     <div>
@@ -54,10 +61,11 @@ export default function Hierarchy() {
 
       {data.length > 0 && (
         <>
+          {/* KPI Cards */}
           <div className="stat-cards-grid">
-            <StatCard icon={Network}   label="Total Zona Hierarki"  value={data.length}  gradient="purple" />
-            <StatCard icon={Activity}  label="Total Gempa"           value={total}         gradient="cyan"   />
-            <StatCard icon={BarChart2} label="Rata-rata per Zona"    value={avgPerZone}    gradient="green"  />
+            <StatCard icon={Network}   label="Total Zona Hierarki" value={data.length}  gradient="purple" />
+            <StatCard icon={Activity}  label="Total Gempa"          value={total}         gradient="cyan"   />
+            <StatCard icon={BarChart2} label="Rata-rata per Zona"   value={avgPerZone}    gradient="green"  />
             <StatCard icon={Layers}    label="Zona Terpadat"
               value={topZone ? `H-${topZone.hierarchy_label}` : "—"} gradient="red" />
           </div>
@@ -84,6 +92,51 @@ export default function Hierarchy() {
                     ))}
                   </Bar>
                 </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* Radar Chart */}
+          <div className="panel" style={{ marginBottom: 14 }}>
+            <p className="panel-title">Karakteristik per Zona Hierarki</p>
+            <p style={{ fontSize: 11, color: "rgba(148,163,184,0.6)", marginBottom: 16 }}>
+              Perbandingan rata-rata magnitudo, kedalaman (÷10), dan proporsi data antar zona
+            </p>
+            <div style={{ height: 300 }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <RadarChart data={radarData}>
+                  <PolarGrid stroke="rgba(255,255,255,0.08)" />
+                  <PolarAngleAxis dataKey="zone" tick={{ fontSize: 11, fill: "#94A3B8" }} />
+                  <PolarRadiusAxis tick={{ fontSize: 8, fill: "#94A3B8" }} />
+                  <Radar
+                    name="Magnitudo"
+                    dataKey="Magnitudo"
+                    stroke="#7C3AED"
+                    fill="#7C3AED"
+                    fillOpacity={0.25}
+                  />
+                  <Radar
+                    name="Kedalaman (÷10 km)"
+                    dataKey="Kedalaman"
+                    stroke="#06B6D4"
+                    fill="#06B6D4"
+                    fillOpacity={0.25}
+                  />
+                  <Radar
+                    name="Proporsi (%)"
+                    dataKey="Proporsi"
+                    stroke="#10B981"
+                    fill="#10B981"
+                    fillOpacity={0.25}
+                  />
+                  <Legend wrapperStyle={{ fontSize: 11, color: "#94A3B8" }} />
+                  <Tooltip
+                    contentStyle={{
+                      background: "#ffffff", border: "1px solid rgba(0,0,0,0.10)",
+                      borderRadius: "8px", fontSize: "12px", color: "#1e293b",
+                    }}
+                  />
+                </RadarChart>
               </ResponsiveContainer>
             </div>
           </div>
