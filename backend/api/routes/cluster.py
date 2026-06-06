@@ -71,7 +71,7 @@ def train_cluster(db: Session = Depends(get_db)):
 
 @router.get("/results")
 def get_results(
-    limit: int = Query(default=500, ge=1, le=5000, description="Jumlah data yang diambil"),
+    limit: int = Query(default=1000, ge=1, le=200000, description="Jumlah data yang diambil"),
     offset: int = Query(default=0, ge=0, description="Offset untuk pagination")
 ):
     """Ambil hasil clustering dari database (earthquake_clusters join raw_earthquakes)."""
@@ -117,7 +117,7 @@ def get_hierarchy_summary_endpoint():
 
 @router.get("/anomalies")
 def get_anomalies(
-    limit: int = Query(default=200, ge=1, le=1000, description="Jumlah anomali yang diambil")
+    limit: int = Query(default=500, ge=1, le=2000, description="Jumlah anomali yang diambil")
 ):
     """Ambil gempa yang terdeteksi sebagai anomali (kedalaman/magnitudo ekstrem)."""
     try:

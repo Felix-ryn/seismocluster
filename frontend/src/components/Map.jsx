@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { MapContainer, TileLayer, CircleMarker, Popup } from "react-leaflet";
+import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import MagBadge from "./MagBadge";
 import ClusterBadge from "./ClusterBadge";
@@ -10,6 +11,8 @@ const cssVar = (name) =>
 const clusterIndex = (clusterId) => ((clusterId % 8) + 8) % 8;
 
 export default function Map({ data = [] }) {
+  const renderer = useMemo(() => L.canvas({ padding: 0.5 }), []);
+
   const colors = useMemo(() => ({
     clusters: [0, 1, 2, 3, 4, 5, 6, 7].map((i) => cssVar(`--cluster-${i}`)),
     anomaly: cssVar("--cluster-anomaly"),
@@ -69,6 +72,7 @@ export default function Map({ data = [] }) {
                 key={point.id}
                 center={[point.latitude, point.longitude]}
                 radius={radius}
+                renderer={renderer}
                 pathOptions={{
                   fillColor: fill,
                   fillOpacity: point.is_anomaly ? 0.95 : 0.8,
@@ -91,6 +95,15 @@ export default function Map({ data = [] }) {
                         <span className="popup-anomaly-badge">Anomali</span>
                       )}
                     </div>
+                    {point.time && (
+                      <div className="popup-depth">
+                        Waktu: {new Date(point.time).toLocaleString("id-ID", {
+                          day: "2-digit", month: "short", year: "numeric",
+                          hour: "2-digit", minute: "2-digit",
+                          timeZone: "Asia/Jakarta"
+                        })} WIB
+                      </div>
+                    )}
                     {point.depth != null && (
                       <div className="popup-depth">Kedalaman: {point.depth} km</div>
                     )}
