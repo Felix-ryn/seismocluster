@@ -95,6 +95,15 @@ export default function Map({ data = [] }) {
                         <span className="popup-anomaly-badge">Anomali</span>
                       )}
                     </div>
+                    {point.time && (
+                      <div className="popup-depth">
+                        Waktu: {new Date(point.time).toLocaleString("id-ID", {
+                          day: "2-digit", month: "short", year: "numeric",
+                          hour: "2-digit", minute: "2-digit",
+                          timeZone: "Asia/Jakarta"
+                        })} WIB
+                      </div>
+                    )}
                     {point.depth != null && (
                       <div className="popup-depth">Kedalaman: {point.depth} km</div>
                     )}
