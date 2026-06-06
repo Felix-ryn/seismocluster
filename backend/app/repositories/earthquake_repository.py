@@ -208,7 +208,7 @@ def get_cluster_results(limit=500, offset=0):
             ec.created_at
         FROM earthquake_clusters ec
         JOIN raw_earthquakes re ON ec.id = re.id
-        ORDER BY re.time DESC
+        ORDER BY ec.created_at DESC
         LIMIT %s OFFSET %s
     """, (limit, offset))
     data = cursor.fetchall()
