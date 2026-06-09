@@ -88,7 +88,7 @@ export default function Hotspot() {
                 </thead>
                 <tbody>
                   {sorted.map((d, i) => {
-                    const lvl = d.total_earthquakes > 100 ? "high" : d.total_earthquakes > 50 ? "medium" : "low";
+                    const lvl = d.total_earthquakes > 10000 ? "high" : d.total_earthquakes > 5000 ? "medium" : "low";
                     return (
                       <tr key={d.cluster ?? i}>
                         <td><ClusterBadge clusterId={d.cluster} /></td>
